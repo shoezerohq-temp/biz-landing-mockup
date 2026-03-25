@@ -404,7 +404,8 @@
     /* ============================================================
        HOW IT WORKS (Option A — Ghost Numbers + Arrows + Green Bar)
        ============================================================ */
-    .oA-hiw { background: var(--sz-white); max-width: 1100px; margin: 0 auto; padding: var(--sz-section-py) var(--sz-pad-x); }
+    .oA-hiw-outer { background: #F7F7F5; width: 100%; }
+    .oA-hiw { max-width: 1100px; margin: 0 auto; padding: var(--sz-section-py) var(--sz-pad-x); }
     .oA-header { text-align: center; margin-bottom: 20px; }
     .oA-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sz-text-muted); margin-bottom: 16px; }
     .oA-eyebrow::before, .oA-eyebrow::after { content: ''; width: 20px; height: 1px; background: #e5e5e5; }
@@ -431,7 +432,7 @@
     /* ============================================================
        SECTION 5 — USE CASES (Dark with Green Accent Lines)
        ============================================================ */
-    .oC-wrap-outer { background: #F7F7F5; width: 100%; }
+    .oC-wrap-outer { background: #fff; width: 100%; }
     .oC-wrap { padding: var(--sz-section-py) var(--sz-pad-x); max-width: 1200px; margin: 0 auto; }
     .oC-inner { max-width: 1000px; margin: 0 auto; }
     .oC-header { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 32px; align-items: end; }
@@ -861,6 +862,7 @@
   <!-- ============================================================
        SECTION — HOW IT WORKS (Option A — Ghost Numbers + Arrows + Green Bar)
        ============================================================ -->
+  <div class="oA-hiw-outer">
   <section class="oA-hiw" id="how-it-works" data-sz-reveal>
     <div class="oA-header">
       <h2 class="oA-heading">Get <em>branded shoes</em> in 3 easy steps</h2>
@@ -874,6 +876,7 @@
     </div>
     <div class="oA-bar"></div>
   </section>
+  </div>
 
   <!-- ============================================================
        SECTION 5 — USE CASES (Dark with Green Accent Lines)
@@ -901,17 +904,6 @@
   </section>
   </div>
 
-  <!-- ============================================================
-       PRODUCT SHOWCASE (Scattered Float — Option E)
-       ============================================================ -->
-  <section class="oE-s" data-option="E">
-    <div class="oE-center"><h2>Shoes we've made<br>for <em>businesses</em></h2></div>
-    <div class="oE-shoes">
-      <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/apFOxMcivLTEBfMmuaBhZTtGGuTwxYDY.jpg?width=400" alt="21 Century Realty branded shoes" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/1743795181-1-vPzr0TD25Q.jpg?width=400" alt="ABB Canada branded shoes" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/1712594641-1-N7pEZ9UeKr.jpg?width=400" alt="Admiral Insurance branded shoes" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/ugakzJLLrKTWeKrKiPrIRETFbcKCizPt.jpg?width=400" alt="Amazon Music branded shoes" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/products/kCPBJcdFgSHjQMwZzaoRFBPgBgpZPeKF.jpg?width=400" alt="Alcon branded shoes" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/1733243218-2-9z6S8vKwzm.jpg?width=400" alt="Ace Alternatives branded shoes" loading="lazy">
-      <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/1760956211-1-Gqvgk7N8jO.jpg?width=400" alt="Aurora branded shoes" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/products/OzzYdeifvWGrTVgUkSbVNBvpIttCZvMY.jpg?width=400" alt="Alta Sneakers branded shoes" loading="lazy"><div class="empty"></div><div class="empty"></div><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/1742852254-1-d0VtFJMQdt.jpg?width=400" alt="Better RX branded shoes" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/1727310912-1-G4JeDV8XLc.jpg?width=400" alt="Amforca branded shoes" loading="lazy">
-      <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/1731088198-2-i8XoIcko1R.jpg?width=400" alt="A Seat In The Table branded shoes" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/VKllIEDVxzXacAyyYfsbUJmAUSonIhSX.jpg?width=400" alt="Beyond Collections branded shoes" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/1753825876-1-4a73PdjKyt.jpg?width=400" alt="A+ Garage Doors branded shoes" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/uICRSRpOqHzRiFwMVYYXoYxFVLSLZByX.jpg?width=400" alt="AiN Group branded shoes" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/1738865525-2-Cg1WpwPTqY.jpg?width=400" alt="AAC 360 branded shoes" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/1718732133-2-zBQMm5hG6c.jpg?width=400" alt="ATG branded shoes" loading="lazy">
-    </div>
-  </section>
 
   <!-- SVG icon sprite -->
   <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
