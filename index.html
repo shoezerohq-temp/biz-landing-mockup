@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Business Inquiry — Shoe Zero Mockup</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ================================================
+       SHOE ZERO — Business Inquiry Page Mockup
+       Brand tokens + all 9 sections
+       ================================================ */
+
+    /* === RESET & TOKENS === */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* Brand colors */
+      --sz-bg-warm: #f7f7f5;
+      --sz-bg-cool: #f0f0f0;
+      --sz-text-primary: #1a1a1a;
+      --sz-text-muted: #777777;
+      --sz-accent: #00704a;
+      --sz-white: #ffffff;
+      --sz-black: #1a1a1a;
+
+      /* Radii */
+      --sz-radius-image: 8px;
+      --sz-radius-card: 12px;
+      --sz-radius-btn: 8px;
+      --sz-radius-hero-image: 16px;
+
+      /* Spacing */
+      --sz-max-width: 1200px;
+      --sz-pad-x: 40px;
+      --sz-pad-x-mobile: 16px;
+      --sz-section-py: 40px;
+
+      /* Animation */
+      --sz-ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --sz-ease-entrance: cubic-bezier(0.34, 1.56, 0.64, 1);
+      --sz-duration-fast: 400ms;
+      --sz-duration-base: 600ms;
+      --sz-stagger: 80ms;
+      --sz-reveal-y: 30px;
+
+      /* Shadows — volumetric 3-layer */
+      --sz-shadow-card: 0 1px 2px rgba(0,0,0,0.04), 0 4px 12px rgba(0,0,0,0.06), 0 12px 32px rgba(0,0,0,0.04);
+      --sz-shadow-card-hover: 0 2px 4px rgba(0,0,0,0.06), 0 8px 20px rgba(0,0,0,0.08), 0 20px 48px rgba(0,0,0,0.06);
+      --sz-shadow-glass: 0 8px 32px rgba(0,0,0,0.08), 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      :root {
+        --sz-duration-fast: 0ms;
+        --sz-duration-base: 0ms;
+        --sz-reveal-y: 0px;
+      }
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      color: var(--sz-text-primary);
+      background: var(--sz-white);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img { max-width: 100%; display: block; }
+    a { color: inherit; }
+
+    .sz-container {
+      max-width: var(--sz-max-width);
+      margin: 0 auto;
+      padding: 0 var(--sz-pad-x);
+    }
+
+    /* === SCROLL REVEAL === */
+    [data-sz-reveal] {
+      opacity: 0;
+      transform: translateY(var(--sz-reveal-y));
+      transition: opacity var(--sz-duration-base) var(--sz-ease),
+                  transform var(--sz-duration-base) var(--sz-ease);
+    }
+    [data-sz-reveal].is-visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* === EYEBROW UTIL === */
+    .sz-eyebrow {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--sz-accent);
+      margin-bottom: 12px;
+    }
+
+    /* === SECTION HEADING === */
+    .sz-section-heading {
+      font-size: clamp(28px, 3vw, 40px);
+      font-weight: 800;
+      line-height: 1.15;
+      text-wrap: balance;
+      margin-bottom: 16px;
+    }
+
+    .sz-section-subtitle {
+      font-size: 16px;
+      color: var(--sz-text-muted);
+      max-width: 560px;
+      line-height: 1.6;
+    }
+
+    .text-center { text-align: center; }
+    .mx-auto { margin-left: auto; margin-right: auto; }
+
+    /* === BUTTONS === */
+    .sz-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: none;
+      border-radius: var(--sz-radius-btn);
+      padding: 14px 28px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      transition: transform var(--sz-duration-fast) var(--sz-ease),
+                  box-shadow var(--sz-duration-fast) var(--sz-ease),
+                  opacity var(--sz-duration-fast) var(--sz-ease);
+      min-height: 48px;
+    }
+    .sz-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--sz-shadow-card);
+    }
+    .sz-btn:active { transform: translateY(0); }
+
+    .sz-btn--primary {
+      background: var(--sz-accent);
+      color: var(--sz-white);
+    }
+
+    .sz-btn--text {
+      background: none;
+      color: var(--sz-text-primary);
+      padding: 14px 8px;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+    .sz-btn--text:hover {
+      box-shadow: none;
+      opacity: 0.7;
+    }
+
+    /* ============================================================
+       NAV BAR (Simplified)
+       ============================================================ */
+    .sz-nav { background: var(--sz-white); border-bottom: 1px solid #e5e5e5; position: sticky; top: 0; z-index: 100; }
+    .sz-nav__inner { max-width: var(--sz-max-width); margin: 0 auto; padding: 16px var(--sz-pad-x); display: flex; align-items: center; justify-content: space-between; }
+    .sz-nav__logo img { height: 32px; width: auto; }
+    .sz-nav__links { display: flex; align-items: center; gap: 32px; }
+    .sz-nav__links a { font-size: 14px; font-weight: 500; color: var(--sz-text-primary); text-decoration: none; transition: color 0.2s var(--sz-ease); }
+    .sz-nav__links a:hover { color: var(--sz-accent); }
+    .sz-nav__cta { padding: 10px 24px; font-size: 13px; font-weight: 600; background: var(--sz-accent); color: #fff; border-radius: var(--sz-radius-image); text-decoration: none; transition: transform 0.2s var(--sz-ease), box-shadow 0.2s var(--sz-ease); }
+    .sz-nav__cta:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,112,74,0.25); }
+
+    /* ============================================================
+       SECTION 1 — HERO
+       ============================================================ */
+    .biz-hero {
+      background: var(--sz-white);
+      padding: 105px 0 32px;
+      overflow: hidden;
+    }
+
+    .biz-hero__inner {
+      display: grid;
+      grid-template-columns: 40% 60%;
+      gap: 40px;
+      align-items: stretch;
+    }
+    .biz-hero__inner > div:first-child {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .biz-hero__eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #888;
+      margin-bottom: 16px;
+    }
+
+    .biz-hero__h1 {
+      font-size: clamp(36px, 5vw, 52px);
+      font-weight: 800;
+      line-height: 1.08;
+      margin-top: 6.5rem;
+      margin-bottom: 48px;
+    }
+    .biz-hero__h1 em {
+      font-style: normal;
+      color: var(--sz-accent);
+    }
+
+    .biz-hero__subtitle {
+      font-size: 15px;
+      color: var(--sz-text-muted);
+      line-height: 1.65;
+      max-width: 480px;
+      margin-bottom: 28px;
+    }
+
+    .biz-hero__ctas {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .biz-hero__trust {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 12px;
+      color: var(--sz-text-muted);
+      margin-bottom: 32px;
+    }
+    .biz-hero__trust span::before {
+      content: '✓ ';
+      color: var(--sz-accent);
+      font-weight: 700;
+    }
+
+    .biz-hero__stats {
+      display: flex;
+      gap: 36px;
+    }
+    .biz-hero__stat-num {
+      font-size: 24px;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--sz-accent);
+    }
+    .biz-hero__stat-label {
+      font-size: 12px;
+      color: var(--sz-text-muted);
+      margin-top: 4px;
+    }
+
+    /* Hero — Video */
+    .biz-hero__video-wrap {
+      width: 100%;
+      max-width: 1054px;
+      margin: 0 auto;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: none;
+      border: 1px solid #e5e5e2;
+    }
+    .biz-hero__video-wrap video {
+      width: 100%;
+      display: block;
+    }
+
+    /* ============================================================
+       SECTION 2 — PARTNER BRANDS (exact copy of sz-trusted-brands-v3)
+       ============================================================ */
+    .sz-brands {
+      display: flex;
+      align-items: center;
+      gap: 56px;
+      max-width: var(--sz-max-width);
+      margin: 0 auto;
+      padding: 25px var(--sz-pad-x) 18px;
+      overflow: hidden;
+    }
+
+    /* Reviews block — swapped for "Our Partners" heading on biz page */
+    .sz-brands-heading {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 2px;
+    }
+    .sz-brands-heading span {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--sz-text-primary);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    /* Reviews (kept for reference — hidden on biz page) */
+    .sz-brands-reviews { display: flex; flex-direction: column; flex-shrink: 0; gap: 6px; }
+    .sz-brands-reviews-row { display: flex; gap: 37px; align-items: center; }
+    .sz-review { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
+    .sz-review-name { display: flex; align-items: center; gap: 6px; }
+    .sz-review-name span { font-size: 16px; font-weight: 600; color: var(--sz-text-primary); }
+    .sz-review-name svg { height: 22px; width: auto; }
+    .sz-review-name img { height: 19px; width: auto; }
+    .sz-review-rating { display: flex; align-items: center; gap: 4px; }
+    .sz-review-rating strong { font-size: 18px; font-weight: 700; color: var(--sz-text-primary); }
+    .sz-review-rating svg { width: 16px; height: 16px; position: relative; top: -2px; }
+    .sz-review-rating .sz-review-label { font-size: 14px; color: #999; font-weight: 400; }
+
+    .sz-brands-divider { width: 2px; height: 81px; background: #d0d0d0; flex-shrink: 0; }
+
+    /* Marquee */
+    .sz-brands-marquee {
+      flex: 1;
+      overflow: hidden;
+      mask-image: linear-gradient(to right, transparent, black 64px, black 80%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to right, transparent, black 64px, black 80%, transparent 100%);
+    }
+    .sz-brands-track {
+      display: flex;
+      align-items: center;
+      gap: 56px;
+      padding-left: 0;
+      animation: sz-brands-scroll 25s linear infinite;
+      width: max-content;
+      will-change: transform;
+      backface-visibility: hidden;
+    }
+    .sz-brands-track img {
+      max-height: 44px;
+      max-width: 166px;
+      width: auto;
+      height: auto;
+      opacity: 1;
+      flex-shrink: 0;
+      cursor: default;
+      filter: brightness(0);
+    }
+    .sz-brands-track img.sz-logo-nofilter { filter: none; }
+
+    @keyframes sz-brands-scroll {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(var(--sz-scroll-distance, -50%), 0, 0); }
+    }
+
+    @media (max-width: 768px) {
+      .sz-brands {
+        flex-direction: column;
+        gap: 10px;
+        padding: 14px 16px;
+        align-items: center;
+      }
+      .sz-brands-heading { align-items: center; }
+      .sz-brands-divider { width: 60px; height: 1px; }
+      .sz-brands-track { animation-duration: 18s; gap: 28px; }
+      .sz-brands-track img { max-height: 24px; max-width: 120px; }
+    }
+
+    /* ============================================================
+       SECTION 3 — STATS / SOCIAL PROOF
+       ============================================================ */
+    .biz-stats {
+      background: var(--sz-white);
+      padding: 44px 0;
+    }
+
+    .biz-stats__grid {
+      display: flex;
+      justify-content: center;
+      gap: 56px;
+    }
+
+    .biz-stats__item {
+      text-align: center;
+    }
+    .biz-stats__dot {
+      width: 5px;
+      height: 5px;
+      background: var(--sz-accent);
+      border-radius: 50%;
+      margin: 0 auto 8px;
+    }
+    .biz-stats__number {
+      font-size: clamp(25px, 2.8vw, 39px);
+      font-weight: 800;
+      line-height: 1;
+      margin-bottom: 6px;
+      color: var(--sz-accent);
+    }
+    .biz-stats__label {
+      font-size: 12px;
+      color: var(--sz-text-muted);
+      font-weight: 500;
+    }
+
+    /* ============================================================
+       HOW IT WORKS (Option A — Ghost Numbers + Arrows + Green Bar)
+       ============================================================ */
+    .oA-hiw { background: var(--sz-white); max-width: 1100px; margin: 0 auto; padding: var(--sz-section-py) var(--sz-pad-x); }
+    .oA-header { text-align: center; margin-bottom: 20px; }
+    .oA-eyebrow { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sz-text-muted); margin-bottom: 16px; }
+    .oA-eyebrow::before, .oA-eyebrow::after { content: ''; width: 20px; height: 1px; background: #e5e5e5; }
+    .oA-heading { font-size: clamp(28px, 3.5vw, 44px); font-weight: 900; letter-spacing: -0.03em; line-height: 1.05; }
+    .oA-heading em { font-style: normal; color: var(--sz-accent); }
+    .oA-sub { font-size: 15px; color: var(--sz-text-muted); margin-top: 12px; line-height: 1.6; max-width: 560px; margin-left: auto; margin-right: auto; }
+    .oA-steps { display: grid; grid-template-columns: 1fr auto 1fr auto 1fr; gap: 0; align-items: start; margin-bottom: 8px; }
+    .oA-step { text-align: left; padding: 0 16px; }
+    .oA-step-num { font-size: 72px; font-weight: 900; color: var(--sz-text-primary); opacity: 0.35; line-height: 1; letter-spacing: -0.04em; margin-bottom: 8px; transition: opacity 0.4s var(--sz-ease); }
+    .oA-step:hover .oA-step-num { opacity: 0.6; }
+    .oA-step h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .oA-step p { font-size: 13px; color: var(--sz-text-muted); line-height: 1.55; }
+    .oA-step p strong { color: var(--sz-text-primary); font-weight: 600; }
+    .oA-arrow { display: flex; align-items: center; justify-content: center; padding-top: 32px; color: var(--sz-accent); font-size: 18px; font-weight: 800; }
+    .oA-bar { height: 4px; background: var(--sz-accent); border-radius: 2px; margin: 32px 0 40px; }
+
+    @media (max-width: 768px) {
+      .oA-hiw { padding: var(--sz-section-py) var(--sz-pad-x-mobile); }
+      .oA-steps { grid-template-columns: 1fr; gap: 24px; }
+      .oA-arrow { display: none; }
+      .oA-step-num { font-size: 48px; }
+    }
+
+    /* ============================================================
+       SECTION 5 — USE CASES (Dark with Green Accent Lines)
+       ============================================================ */
+    .oC-wrap-outer { background: #F7F7F5; width: 100%; }
+    .oC-wrap { padding: var(--sz-section-py) var(--sz-pad-x); max-width: 1200px; margin: 0 auto; }
+    .oC-inner { max-width: 1000px; margin: 0 auto; }
+    .oC-header { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 32px; align-items: end; }
+    .oC-eyebrow { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.2em; color: var(--sz-accent); margin-bottom: 16px; }
+    .oC-heading { font-size: clamp(28px, 3.5vw, 40px); font-weight: 800; letter-spacing: -0.02em; color: var(--sz-text-primary); line-height: 1.1; }
+    .oC-header-right { font-size: 15px; color: var(--sz-text-muted); line-height: 1.6; padding-bottom: 4px; }
+    .oC-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0; }
+    .oC-card { padding: 32px 28px; border-left: 1px solid #e5e5e5; transition: background 0.3s var(--sz-ease); }
+    .oC-card:first-child, .oC-card:nth-child(4) { border-left: none; }
+    .oC-card:nth-child(n+4) { border-top: 1px solid #e5e5e5; }
+    .oC-card:hover { background: var(--sz-accent); }
+    .oC-card:hover h3, .oC-card:hover p { color: #fff; }
+    .oC-card-bar { width: 24px; height: 2px; background: var(--sz-accent); margin-bottom: 20px; transition: width 0.3s var(--sz-ease); }
+    .oC-card:hover .oC-card-bar { width: 40px; background: #fff; }
+    .oC-card h3 { font-size: 15px; font-weight: 700; color: var(--sz-text-primary); margin-bottom: 8px; transition: color 0.3s var(--sz-ease); }
+    .oC-card p { font-size: 13px; color: var(--sz-text-muted); line-height: 1.55; transition: color 0.3s var(--sz-ease); }
+    .oC-cta { margin-top: 32px; padding-top: 24px; border-top: 1px solid #e5e5e5; }
+    .oC-cta a { font-size: 15px; font-weight: 600; color: var(--sz-accent); text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: gap 0.3s var(--sz-ease); }
+    .oC-cta a:hover { gap: 12px; }
+
+    /* ============================================================
+       PRODUCT SHOWCASE (Scattered Float — Option E)
+       ============================================================ */
+    .oE-s{background:#fff;padding:var(--sz-section-py) var(--sz-pad-x);position:relative;overflow:hidden;min-height:360px;max-width:1200px;margin:0 auto}
+    .oE-center{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;z-index:2}
+    .oE-center h2{font-size:clamp(24px,3.5vw,42px);font-weight:900;letter-spacing:-0.03em;line-height:1.15}
+    .oE-center h2 em{font-style:normal;color:var(--sz-accent)}
+    .oE-shoes{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;opacity:0.35}
+    .oE-shoes img{width:100%;aspect-ratio:4/3;object-fit:contain}
+    .oE-shoes .empty{visibility:hidden}
+
+    /* ============================================================
+       SECTION 6 — WHY SHOE ZERO (Classic Split — Option A)
+       ============================================================ */
+    .feat-icon { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .feat-icon svg { width: 22px; height: 22px; stroke-width: 1.8; }
+    .oWhyA-outer { background: #F7F7F5; width: 100%; }
+    .oWhyA { padding: var(--sz-section-py) var(--sz-pad-x); max-width: 1200px; margin: 0 auto; }
+    .oWhyA-grid { display: grid; grid-template-columns: 0.42fr 0.58fr; gap: 96px; align-items: start; }
+    .oWhyA-left { position: sticky; top: 100px; }
+    .oWhyA-eyebrow { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--sz-accent); margin-bottom: 16px; }
+    .oWhyA-heading { font-size: clamp(32px, 4vw, 48px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.08; margin-bottom: 24px; }
+    .oWhyA-heading em { font-style: normal; color: var(--sz-accent); }
+    .oWhyA-img { border-radius: 16px; overflow: hidden; aspect-ratio: 4/3; background: var(--sz-bg-warm); }
+    .oWhyA-img img { width: 100%; height: 100%; object-fit: cover; }
+    .oWhyA-features { display: flex; flex-direction: column; gap: 0; }
+    .oWhyA-feat { display: flex; gap: 18px; padding: 28px 0; border-bottom: 1px solid #f0f0f0; transition: background 0.3s var(--sz-ease); }
+    .oWhyA-feat:first-child { padding-top: 0; }
+    .oWhyA-feat:last-child { border-bottom: none; padding-bottom: 0; }
+    .oWhyA-feat .feat-icon { background: rgba(0,112,74,0.08); color: var(--sz-accent); }
+    .oWhyA-feat h3 { font-size: 16px; font-weight: 700; margin-bottom: 5px; letter-spacing: -0.01em; }
+    .oWhyA-feat p { font-size: 14px; color: var(--sz-text-muted); line-height: 1.6; }
+
+    /* ============================================================
+       SECTION 7 — VIDEO TESTIMONIALS (Portrait Cards)
+       ============================================================ */
+    .testi {
+      background: var(--sz-white);
+      padding: var(--sz-section-py) 0;
+    }
+    .testi__inner { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    .testi__header { text-align: center; margin-bottom: 24px; }
+    .testi__heading {
+      font-size: clamp(26px, 3.5vw, 40px);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 12px;
+      color: #1a1a1a;
+    }
+    .testi__heading em { font-style: normal; color: var(--sz-accent); }
+    .testi__subheading {
+      font-size: 15px; color: #888; line-height: 1.6;
+      max-width: 480px; margin: 0 auto;
+    }
+    .testi__grid { display: grid; grid-template-columns: 1fr 1.1fr 1fr; gap: 20px; align-items: start; }
+    .testi__grid > :nth-child(2) { margin-top: -20px; }
+    .testi__card { border-radius: 20px; overflow: hidden; cursor: pointer; position: relative; }
+    .testi__thumb-wrap { aspect-ratio: 9/16; overflow: hidden; position: relative; border-radius: 20px; }
+    .testi__thumb { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease; }
+    .testi__scrim {
+      position: absolute; inset: 0; border-radius: 20px;
+      background: linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.2) 45%, transparent 70%);
+    }
+    .testi__company {
+      position: absolute; top: 14px; left: 14px;
+      background: rgba(255,255,255,0.15); backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.25); border-radius: 20px;
+      padding: 5px 12px; font-size: 12px; font-weight: 600; color: #fff;
+    }
+    .testi__play {
+      position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+      width: 52px; height: 52px; border-radius: 50%;
+      background: rgba(255,255,255,0.22); backdrop-filter: blur(6px);
+      border: 2px solid rgba(255,255,255,0.5);
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+    .testi__play::after {
+      content: ''; width: 0; height: 0;
+      border-top: 9px solid transparent; border-bottom: 9px solid transparent;
+      border-left: 16px solid #fff; margin-left: 3px;
+    }
+    .testi__quote {
+      position: absolute; bottom: 16px; left: 16px; right: 16px;
+      font-size: 13px; font-weight: 500; color: #fff; line-height: 1.5;
+    }
+    .testi__person { display: flex; align-items: center; gap: 12px; padding: 14px 4px 0; }
+    .testi__avatar { width: 38px; height: 38px; border-radius: 8px; object-fit: cover; flex-shrink: 0; background: var(--sz-bg-warm, #f7f7f5); }
+    .testi__name { font-size: 13px; font-weight: 700; color: #1a1a1a; }
+    .testi__role { font-size: 11px; color: #888; margin-top: 1px; }
+
+    /* ============================================================
+       SECTION 4 — INQUIRY FORM (Asymmetric Overlap — Option C)
+       ============================================================ */
+    .oC-form-wrap { max-width: 1200px; margin: 0 auto; padding: var(--sz-section-py) var(--sz-pad-x); }
+    .oC-container { position: relative; display: grid; grid-template-columns: 1.35fr 1fr; gap: 24px; min-height: 560px; }
+    .oC-media { border-radius: var(--sz-radius-hero-image); overflow: hidden; position: relative; background: var(--sz-bg-warm); }
+    .oC-media img { width: 100%; height: 100%; object-fit: cover; object-position: 25% center; }
+    .oC-overlay { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0) 100%); display: flex; flex-direction: column; justify-content: center; padding: 60px 48px; }
+    .oC-overlay .eyebrow { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.15em; color: rgba(255,255,255,0.7); margin-bottom: 16px; }
+    .oC-overlay h2 { font-size: clamp(28px, 3vw, 38px); font-weight: 800; letter-spacing: -0.02em; color: #fff; text-wrap: balance; margin-bottom: 16px; max-width: 400px; }
+    .oC-overlay p { font-size: 15px; color: rgba(255,255,255,0.75); max-width: 360px; line-height: 1.6; }
+    .oC-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: auto 24px 24px; padding: 14px 20px; text-align: center; background: rgba(247,247,245,0.8); border-radius: 12px; }
+    .oC-stat-label { white-space: nowrap; }
+    .oC-stat-num { font-size: 34px; font-weight: 800; color: var(--sz-accent); }
+    .oC-stat-label { font-size: 16px; color: var(--sz-text-primary); margin-top: 2px; }
+    .oC-thumbs { display: flex; gap: 12px; position: absolute; bottom: 24px; left: 48px; }
+    .oC-thumbs img { width: 64px; height: 64px; border-radius: var(--sz-radius-image); border: 2px solid rgba(255,255,255,0.3); object-fit: cover; transition: transform 0.3s var(--sz-ease), border-color 0.3s var(--sz-ease); cursor: pointer; }
+    .oC-thumbs img:hover { transform: scale(1.1); border-color: #fff; }
+    .oC-form-card { background: #fff; border-radius: var(--sz-radius-hero-image); padding: 36px; margin-left: 0; margin-top: 0; margin-bottom: 0; box-shadow: var(--sz-shadow-card); position: relative; z-index: 2; align-self: center; }
+    .oC-form-title { font-size: 18px; font-weight: 700; margin-bottom: 20px; }
+    .oC-form-card .sz-form__btn { width: 100%; margin-top: 8px; }
+
+    /* Form field styles */
+    .sz-form__label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 6px; color: var(--sz-text-primary); }
+    .sz-form__req { color: var(--sz-accent); }
+    .sz-form__input, .sz-form__select, .sz-form__textarea { width: 100%; padding: 12px 16px; border: 1px solid #e0e0dc; border-radius: var(--sz-radius-image); font-family: inherit; font-size: 15px; color: var(--sz-text-primary); background: #fff; outline: none; transition: border-color 0.2s var(--sz-ease), box-shadow 0.2s var(--sz-ease); }
+    .sz-form__input:focus, .sz-form__select:focus, .sz-form__textarea:focus { border-color: var(--sz-accent); box-shadow: 0 0 0 3px rgba(0,112,74,0.12); }
+    .sz-form__input::placeholder, .sz-form__textarea::placeholder { color: #aaa; }
+    .sz-form__textarea { resize: vertical; min-height: 90px; }
+    .sz-form__select { appearance: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23666' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; }
+    .sz-form__row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .sz-form__field { margin-bottom: 16px; }
+    .sz-form__phone-group { display: flex; gap: 0; }
+    .sz-form__phone-prefix { display: flex; align-items: center; gap: 6px; padding: 12px 12px; white-space: nowrap; border: 1px solid #e0e0dc; border-right: none; border-radius: var(--sz-radius-image) 0 0 var(--sz-radius-image); background: #fafafa; font-size: 14px; color: var(--sz-text-primary); user-select: none; }
+    .sz-form__phone-prefix .flag { font-size: 16px; }
+    .sz-form__phone-group .sz-form__input { border-radius: 0 var(--sz-radius-image) var(--sz-radius-image) 0; }
+    .sz-form__btn { display: inline-flex; align-items: center; justify-content: center; padding: 14px 32px; font-size: 15px; font-weight: 600; font-family: inherit; background: var(--sz-accent); color: #fff; border: none; border-radius: var(--sz-radius-image); cursor: pointer; transition: transform 0.2s var(--sz-ease), box-shadow 0.2s var(--sz-ease); }
+    .sz-form__btn:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,112,74,0.25); }
+    .sz-form__btn:active { transform: translateY(0) scale(0.98); }
+    .sz-form__trust { font-size: 12px; color: var(--sz-text-muted); margin-top: 12px; text-align: center; line-height: 1.5; }
+
+    @media (max-width: 768px) {
+      .oC-form-wrap { padding: var(--sz-section-py) var(--sz-pad-x-mobile); }
+      .oC-container { grid-template-columns: 1fr; min-height: auto; }
+      .oC-media { min-height: 320px; }
+      .oC-overlay { padding: 32px 24px; }
+      .oC-form-card { margin-left: 0; margin-top: -24px; margin-bottom: 0; }
+      .oC-thumbs { display: none; }
+      .oC-form-card .sz-form__btn { min-height: 48px; }
+      .sz-form__row { grid-template-columns: 1fr; }
+    }
+
+    /* ============================================================
+       SECTION 10 — CTA BANNER (Full-Width Green)
+       ============================================================ */
+    .oCTA-section { background: var(--sz-accent); }
+    .oCTA-wrap { max-width: 800px; margin: 0 auto; padding: 36px var(--sz-pad-x); text-align: center; }
+    .oCTA-wrap h2 { font-size: clamp(28px, 4vw, 44px); font-weight: 800; letter-spacing: -0.02em; text-wrap: balance; color: #fff; margin-bottom: 24px; }
+    .oCTA-cta { display: inline-flex; align-items: center; justify-content: center; padding: 16px 36px; font-size: 15px; font-weight: 700; font-family: inherit; background: var(--sz-black); color: #fff; border: none; border-radius: 9999px; cursor: pointer; text-decoration: none; transition: transform 0.3s var(--sz-ease), box-shadow 0.3s var(--sz-ease); }
+    .oCTA-cta:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
+    .oCTA-trust { margin-top: 24px; font-size: 13px; color: rgba(255,255,255,0.6); letter-spacing: 0.01em; }
+
+    @media (max-width: 768px) {
+      .oCTA-wrap { padding: 36px var(--sz-pad-x-mobile); }
+      .oCTA-cta { width: 100%; min-height: 48px; }
+    }
+
+    /* ============================================================
+       SECTION 9 — FAQ (Two-Column Masonry Grid)
+       ============================================================ */
+    .oFQ-section { background: var(--sz-white); }
+    .oFQ-wrap { max-width: 1100px; margin: 0 auto; padding: var(--sz-section-py) var(--sz-pad-x); }
+    .oFQ-header { text-align: center; margin-bottom: 48px; }
+    .oFQ-bar { width: 32px; height: 3px; background: var(--sz-accent); border-radius: 2px; margin: 0 auto 20px; }
+    .oFQ-heading { font-size: clamp(26px, 3vw, 40px); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 12px; }
+    .oFQ-sub { font-size: 15px; color: var(--sz-text-muted); line-height: 1.6; max-width: 480px; margin: 0 auto; }
+    .oFQ-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; align-items: start; }
+    .oFQ-item { background: var(--sz-bg-warm); border-radius: var(--sz-radius-card); overflow: hidden; transition: box-shadow 0.3s var(--sz-ease); }
+    .oFQ-item.open { box-shadow: var(--sz-shadow-card); }
+    .oFQ-trigger { width: 100%; display: flex; align-items: center; gap: 14px; padding: 20px 24px; background: none; border: none; cursor: pointer; font-family: inherit; text-align: left; }
+    .oFQ-tag { font-size: 11px; font-weight: 700; color: var(--sz-accent); flex-shrink: 0; min-width: 24px; }
+    .oFQ-q-text { font-size: 15px; font-weight: 600; color: var(--sz-text-primary); line-height: 1.4; flex: 1; transition: color 0.3s var(--sz-ease); }
+    .oFQ-item.open .oFQ-q-text { color: var(--sz-accent); }
+    .oFQ-chevron { width: 20px; height: 20px; flex-shrink: 0; transition: transform 0.4s var(--sz-ease); }
+    .oFQ-chevron svg { width: 20px; height: 20px; }
+    .oFQ-item.open .oFQ-chevron { transform: rotate(180deg); }
+    .oFQ-body { max-height: 0; overflow: hidden; transition: max-height 0.5s var(--sz-ease); }
+    .oFQ-body-inner { padding: 0 24px 20px 62px; font-size: 14px; line-height: 1.7; color: var(--sz-text-muted); }
+
+    /* ============================================================
+       MOBILE (375px)
+       ============================================================ */
+    @media (max-width: 768px) {
+      :root {
+        --sz-section-py: 40px;
+        --sz-pad-x: 16px;
+      }
+
+      .biz-hero { padding: 32px 0; }
+      .biz-hero__inner {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+      .biz-hero__card-stack {
+        order: -1;
+        max-width: 260px;
+      }
+      .biz-hero__h1 {
+        font-size: clamp(28px, 7vw, 36px);
+      }
+      .biz-hero__ctas {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .biz-hero__ctas .sz-btn { width: 100%; text-align: center; }
+      .biz-hero__stats { gap: 24px; }
+
+      .biz-stats__grid {
+        flex-direction: column;
+        gap: 32px;
+      }
+
+      .oC-wrap { padding: var(--sz-section-py) var(--sz-pad-x-mobile); }
+      .oC-header { grid-template-columns: 1fr; gap: 16px; }
+      .oC-grid { grid-template-columns: 1fr; }
+      .oC-card { border-left: none; border-top: 1px solid rgba(255,255,255,0.08); }
+      .oC-card:first-child { border-top: none; }
+
+      .biz-showcase__item {
+        flex: 0 0 280px;
+      }
+
+      .oWhyA { padding: var(--sz-section-py) var(--sz-pad-x-mobile); }
+      .oWhyA-grid { grid-template-columns: 1fr; gap: 32px; }
+      .oWhyA-left { position: static; }
+      .oWhyA-heading { font-size: clamp(28px, 7vw, 36px); }
+
+      .testi__grid {
+        grid-template-columns: 1fr;
+        max-width: 360px;
+        margin: 0 auto;
+      }
+      .oFQ-wrap { padding: var(--sz-section-py) var(--sz-pad-x-mobile); }
+      .oFQ-grid { grid-template-columns: 1fr; }
+      .oFQ-item[style*="grid-column"] { max-width: 100% !important; }
+
+
+      .biz-partners__track { gap: 32px; }
+    }
+
+    /* ============================================================
+       TABLET (1024px)
+       ============================================================ */
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .biz-hero__inner {
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      .biz-usecases__grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .testi__grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .testi__grid > :last-child {
+        grid-column: span 2;
+        max-width: 50%;
+        justify-self: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV BAR -->
+  <nav class="sz-nav">
+    <div class="sz-nav__inner">
+      <a href="https://shoezero.com" class="sz-nav__logo"><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/Shoe_zero_custom_shoe_logowebsite.png?v=1689026229&width=200" alt="Shoe Zero logo"></a>
+      <div class="sz-nav__links">
+        <a href="/collections/custom-shoes">Custom Shoes</a>
+        <a href="/pages/how-it-works">How It Works</a>
+        <a href="/blogs/blog">Blog</a>
+        <a href="/pages/contact">Contact</a>
+        <a href="#b2bform" class="sz-nav__cta">Get a Quote</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============================================================
+       SECTION 1 — HERO
+       ============================================================ -->
+  <section class="biz-hero">
+    <div class="sz-container">
+      <div class="biz-hero__inner">
+
+        <!-- Left column -->
+        <div data-sz-reveal>
+          <h1 class="biz-hero__h1">Custom Shoes<br><em>For Businesses</em></h1>
+
+          <div class="biz-hero__ctas">
+            <a href="#b2bform" class="sz-btn sz-btn--primary">Talk to Our Team</a>
+            <a href="#how-it-works" class="sz-btn sz-btn--text">See How It Works &rarr;</a>
+          </div>
+
+        </div>
+
+        <!-- Right column — Video -->
+        <div class="biz-hero__video-wrap" data-sz-reveal>
+          <video autoplay muted loop playsinline poster="https://shoezero.com/cdn/shop/files/preview_images/752378dd6ddd4e28b6f5f9c1711a9b22.thumbnail.0000000000_large.jpg">
+            <source src="https://shoezero.com/cdn/shop/videos/c/vp/752378dd6ddd4e28b6f5f9c1711a9b22/752378dd6ddd4e28b6f5f9c1711a9b22.HD-1080p-4.8Mbps-26030753.mp4?v=0" type="video/mp4">
+          </video>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 2 — PARTNER BRANDS (exact sz-trusted-brands-v3 structure)
+       ============================================================ -->
+  <div style="background:#F7F7F5;width:100%">
+  <section class="sz-brands">
+    <div class="sz-brands-reviews">
+      <div class="sz-brands-reviews-row">
+        <div class="sz-review">
+          <div class="sz-review-name">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#1a1a1a"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#1a1a1a"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#1a1a1a"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#1a1a1a"/>
+            </svg>
+            <span>Google</span>
+          </div>
+          <div class="sz-review-rating">
+            <strong>4.9</strong>
+            <svg viewBox="0 0 24 24" fill="#1a1a1a"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg>
+            <span class="sz-review-label">Reviews</span>
+          </div>
+        </div>
+        <div class="sz-review">
+          <div class="sz-review-name">
+            <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/t/105/assets/sz-logo-trustpilot-star.png" alt="Trustpilot review platform logo">
+            <span>Trustpilot</span>
+          </div>
+          <div class="sz-review-rating">
+            <strong>4.8</strong>
+            <svg viewBox="0 0 24 24" fill="#1a1a1a"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 22 12 18.27 5.82 22 7 14.14l-5-4.87 6.91-1.01L12 2z"/></svg>
+            <span class="sz-review-label">Reviews</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sz-brands-divider"></div>
+
+    <div class="sz-brands-marquee">
+      <div class="sz-brands-track">
+        <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/t/105/assets/sz-logo-salesforce.png?v=1773916205" alt="Salesforce logo — custom shoe client" title="Salesforce" class="sz-logo-nofilter" loading="eager">
+        <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/t/105/assets/sz-logo-kraft-heinz.png?v=1773843247" alt="Kraft Heinz logo — custom shoe client" title="Kraft Heinz" loading="eager">
+        <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/t/105/assets/sz-logo-guinness.png?v=1773843243" alt="Guinness logo — custom shoe client" title="Guinness" loading="eager">
+        <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/t/105/assets/sz-logo-truecar.png?v=1773843260" alt="TrueCar logo — custom shoe client" title="TrueCar" loading="eager">
+        <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/t/105/assets/sz-logo-microsoft.png?v=1773843248" alt="Microsoft logo — custom shoe client" title="Microsoft" loading="eager">
+        <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/t/105/assets/sz-logo-u-of-south-dakota.png?v=1773843262" alt="University of South Dakota logo — custom shoe client" title="University of South Dakota" loading="eager">
+        <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/t/105/assets/sz-logo-cintas.png?v=1773843238" alt="Cintas logo — custom shoe client" title="Cintas" loading="eager">
+        <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/t/105/assets/sz-logo-gallo.png?v=1773843242" alt="Gallo logo — custom shoe client" title="Gallo" loading="eager">
+        <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/t/105/assets/sz-logo-abb.png?v=1773843233" alt="ABB logo — custom shoe client" title="ABB" loading="eager">
+        <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/t/105/assets/sz-logo-dl-evans-bank.png?v=1773843241" alt="D.L. Evans Bank logo — custom shoe client" title="D.L. Evans Bank" loading="eager">
+        <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/t/105/assets/sz-logo-sutter-health.png?v=1773843255" alt="Sutter Health logo — custom shoe client" title="Sutter Health" loading="eager">
+        <!-- Duplicate set for seamless loop -->
+        <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/t/105/assets/sz-logo-salesforce.png?v=1773916205" alt="Salesforce brand logo" title="Salesforce" class="sz-logo-nofilter" loading="eager">
+        <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/t/105/assets/sz-logo-kraft-heinz.png?v=1773843247" alt="Kraft Heinz brand logo" title="Kraft Heinz" loading="eager">
+        <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/t/105/assets/sz-logo-guinness.png?v=1773843243" alt="Guinness brand logo" title="Guinness" loading="eager">
+        <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/t/105/assets/sz-logo-truecar.png?v=1773843260" alt="TrueCar brand logo" title="TrueCar" loading="eager">
+        <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/t/105/assets/sz-logo-microsoft.png?v=1773843248" alt="Microsoft brand logo" title="Microsoft" loading="eager">
+        <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/t/105/assets/sz-logo-u-of-south-dakota.png?v=1773843262" alt="University of South Dakota brand logo" title="University of South Dakota" loading="eager">
+        <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/t/105/assets/sz-logo-cintas.png?v=1773843238" alt="Cintas brand logo" title="Cintas" loading="eager">
+        <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/t/105/assets/sz-logo-gallo.png?v=1773843242" alt="Gallo brand logo" title="Gallo" loading="eager">
+        <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/t/105/assets/sz-logo-abb.png?v=1773843233" alt="ABB brand logo" title="ABB" loading="eager">
+        <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/t/105/assets/sz-logo-dl-evans-bank.png?v=1773843241" alt="D.L. Evans Bank brand logo" title="D.L. Evans Bank" loading="eager">
+        <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/t/105/assets/sz-logo-sutter-health.png?v=1773843255" alt="Sutter Health brand logo" title="Sutter Health" loading="eager">
+      </div>
+    </div>
+  </section>
+  </div>
+
+
+  <!-- ============================================================
+       SECTION 4 — INQUIRY FORM (Asymmetric Overlap — Option C)
+       ============================================================ -->
+  <section class="oC-form-wrap" id="b2bform" data-option="C">
+    <div class="oC-container">
+      <div class="oC-media">
+        <img src="https://shoezero.com/cdn/shop/files/sz-customer-carousel-07.jpg?width=900" alt="Custom shoe production">
+        <div class="oC-overlay">
+          <h2>Get Branded Shoes For Your Business</h2>
+          <div class="oC-stats">
+            <div><div class="oC-stat-num" data-count="150" data-suffix="+">0+</div><div class="oC-stat-label">Brand Partnerships</div></div>
+            <div><div class="oC-stat-num" data-count="250" data-suffix="k+">0k+</div><div class="oC-stat-label">Pairs Delivered</div></div>
+            <div><div class="oC-stat-num" data-count="48" data-suffix="HR">0HR</div><div class="oC-stat-label">Mockup Turnaround</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="oC-form-card">
+        <div class="oC-form-title">Describe your project. Response in <span style="color:var(--sz-accent)">24 hours</span></div>
+        <div class="sz-form__field"><div class="sz-form__row"><div><label class="sz-form__label">Name <span class="sz-form__req">*</span></label><input class="sz-form__input" type="text" placeholder="Your name"></div><div><label class="sz-form__label">Business Name</label><input class="sz-form__input" type="text" placeholder="Company name"></div></div></div>
+        <div class="sz-form__field"><div class="sz-form__row"><div><label class="sz-form__label">Email <span class="sz-form__req">*</span></label><input class="sz-form__input" type="email" placeholder="you@company.com"></div><div><label class="sz-form__label">Cell Phone #</label><div class="sz-form__phone-group"><span class="sz-form__phone-prefix"><span class="flag">🇺🇸</span> +1</span><input class="sz-form__input" type="tel" placeholder="Digits only"></div></div></div></div>
+        <div class="sz-form__field"><div class="sz-form__row"><div><label class="sz-form__label">Estimated Number of Shoes</label><select class="sz-form__select"><option>Select…</option><option>1–50</option><option>50–200</option><option>200–500</option><option>500–1,000</option><option>1,000+</option></select></div><div><label class="sz-form__label">Event Date <span style="font-weight:400;color:var(--sz-text-muted)">(optional)</span></label><input class="sz-form__input" type="date"></div></div></div>
+        <div class="sz-form__field"><label class="sz-form__label">Extra Notes</label><textarea class="sz-form__textarea" placeholder="What's the event or plan?"></textarea></div>
+        <button class="sz-form__btn">Book a Call</button>
+        <p class="sz-form__trust">No commitment required.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION — HOW IT WORKS (Option A — Ghost Numbers + Arrows + Green Bar)
+       ============================================================ -->
+  <section class="oA-hiw" id="how-it-works" data-sz-reveal>
+    <div class="oA-header">
+      <h2 class="oA-heading">Get <em>branded shoes</em> in 3 easy steps</h2>
+    </div>
+    <div class="oA-steps">
+      <div class="oA-step"><div class="oA-step-num">01</div><h3>Tell us about your project</h3><p>Fill out a <strong>3-minute form</strong> with your brand, quantity, and timeline. We reach out same day.</p></div>
+      <div class="oA-arrow">&rarr;</div>
+      <div class="oA-step"><div class="oA-step-num">02</div><h3>Approve your design</h3><p>Send your logo and colors. Our design team creates mockups <strong>within 48 hours</strong>. Unlimited revisions.</p></div>
+      <div class="oA-arrow">&rarr;</div>
+      <div class="oA-step"><div class="oA-step-num">03</div><h3>Unbox at your event</h3><p>We produce and ship worldwide. Hand them out at trade shows, gift to your team, or wow clients.</p></div>
+    </div>
+    <div class="oA-bar"></div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 5 — USE CASES (Dark with Green Accent Lines)
+       ============================================================ -->
+  <div class="oC-wrap-outer">
+  <section class="oC-wrap">
+    <div class="oC-inner">
+      <div class="oC-header" data-sz-reveal>
+        <div>
+          <div class="oC-eyebrow">Who It's For</div>
+          <h2 class="oC-heading">Built for every <em style="font-style:normal;color:var(--sz-accent)">business</em> need</h2>
+        </div>
+        <div class="oC-header-right">Whether you're outfitting your team, impressing clients, or launching a product line — we've got the perfect shoe for it.</div>
+      </div>
+      <div class="oC-grid">
+        <div class="oC-card" data-sz-reveal><div class="oC-card-bar"></div><h3>Corporate Events &amp; Trade Shows</h3><p>Branded footwear that starts conversations and builds recall.</p></div>
+        <div class="oC-card" data-sz-reveal><div class="oC-card-bar"></div><h3>Employee Onboarding &amp; Team Gifts</h3><p>Custom shoes that build team identity and pride from day one.</p></div>
+        <div class="oC-card" data-sz-reveal><div class="oC-card-bar"></div><h3>Customer &amp; Client Gifts</h3><p>More memorable than a gift card, harder to forget than a thank-you email.</p></div>
+        <div class="oC-card" data-sz-reveal><div class="oC-card-bar"></div><h3>Marketing Campaigns &amp; Giveaways</h3><p>Custom shoes for brand collaborations, PR packages, and giveaways.</p></div>
+        <div class="oC-card" data-sz-reveal><div class="oC-card-bar"></div><h3>Schools &amp; Universities</h3><p>Sports teams, alumni events, campus bookstores. Your colors and logo.</p></div>
+        <div class="oC-card" data-sz-reveal><div class="oC-card-bar"></div><h3>Fundraisers &amp; Nonprofits</h3><p>Something everyone at the event can wear and carry with them.</p></div>
+      </div>
+      <div class="oC-cta"><a href="#b2bform">Talk to our team &rarr;</a></div>
+    </div>
+  </section>
+  </div>
+
+  <!-- ============================================================
+       PRODUCT SHOWCASE (Scattered Float — Option E)
+       ============================================================ -->
+  <section class="oE-s" data-option="E">
+    <div class="oE-center"><h2>Shoes we've made<br>for <em>businesses</em></h2></div>
+    <div class="oE-shoes">
+      <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/apFOxMcivLTEBfMmuaBhZTtGGuTwxYDY.jpg?width=400" alt="21 Century Realty branded shoes" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/1743795181-1-vPzr0TD25Q.jpg?width=400" alt="ABB Canada branded shoes" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/1712594641-1-N7pEZ9UeKr.jpg?width=400" alt="Admiral Insurance branded shoes" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/ugakzJLLrKTWeKrKiPrIRETFbcKCizPt.jpg?width=400" alt="Amazon Music branded shoes" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/products/kCPBJcdFgSHjQMwZzaoRFBPgBgpZPeKF.jpg?width=400" alt="Alcon branded shoes" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/1733243218-2-9z6S8vKwzm.jpg?width=400" alt="Ace Alternatives branded shoes" loading="lazy">
+      <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/1760956211-1-Gqvgk7N8jO.jpg?width=400" alt="Aurora branded shoes" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/products/OzzYdeifvWGrTVgUkSbVNBvpIttCZvMY.jpg?width=400" alt="Alta Sneakers branded shoes" loading="lazy"><div class="empty"></div><div class="empty"></div><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/1742852254-1-d0VtFJMQdt.jpg?width=400" alt="Better RX branded shoes" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/1727310912-1-G4JeDV8XLc.jpg?width=400" alt="Amforca branded shoes" loading="lazy">
+      <img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/1731088198-2-i8XoIcko1R.jpg?width=400" alt="A Seat In The Table branded shoes" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/VKllIEDVxzXacAyyYfsbUJmAUSonIhSX.jpg?width=400" alt="Beyond Collections branded shoes" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/1753825876-1-4a73PdjKyt.jpg?width=400" alt="A+ Garage Doors branded shoes" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/uICRSRpOqHzRiFwMVYYXoYxFVLSLZByX.jpg?width=400" alt="AiN Group branded shoes" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/1738865525-2-Cg1WpwPTqY.jpg?width=400" alt="AAC 360 branded shoes" loading="lazy"><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/1718732133-2-zBQMm5hG6c.jpg?width=400" alt="ATG branded shoes" loading="lazy">
+    </div>
+  </section>
+
+  <!-- SVG icon sprite -->
+  <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="icon-pen" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"></path></symbol>
+    <symbol id="icon-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path></symbol>
+    <symbol id="icon-palette" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="13.5" cy="6.5" r="0.5" fill="currentColor"></circle><circle cx="17.5" cy="10.5" r="0.5" fill="currentColor"></circle><circle cx="8.5" cy="7.5" r="0.5" fill="currentColor"></circle><circle cx="6.5" cy="12" r="0.5" fill="currentColor"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 011.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.555C21.965 6.012 17.461 2 12 2z"></path></symbol>
+    <symbol id="icon-package" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16.5 9.4l-9-5.19M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"></path></symbol>
+    <symbol id="icon-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></symbol>
+  </svg>
+
+  <!-- ============================================================
+       SECTION 6 — WHY SHOE ZERO (Classic Split — Option A)
+       ============================================================ -->
+  <div class="oWhyA-outer">
+  <section class="oWhyA" data-option="A">
+    <div class="oWhyA-grid">
+      <div class="oWhyA-left">
+        <h2 class="oWhyA-heading">Why Team Up With <em>Shoe Zero</em></h2>
+        <div class="oWhyA-img"><img src="https://shoezero.com/cdn/shop/files/sz-customer-carousel-07.jpg?width=800" alt="Custom branded shoes showcase" loading="lazy"></div>
+      </div>
+      <div class="oWhyA-features">
+        <div class="oWhyA-feat">
+          <div class="feat-icon"><svg><use href="#icon-pen"></use></svg></div>
+          <div><h3>Dedicated Design Support</h3><p>You don't need a designer on your end. Our team builds the concept and works with you until it's right.</p></div>
+        </div>
+        <div class="oWhyA-feat">
+          <div class="feat-icon"><svg><use href="#icon-globe"></use></svg></div>
+          <div><h3>Global Shipping</h3><p>We ship worldwide. Your branded shoes delivered wherever your team, event, or customers are.</p></div>
+        </div>
+        <div class="oWhyA-feat">
+          <div class="feat-icon"><svg><use href="#icon-palette"></use></svg></div>
+          <div><h3>Full Customization</h3><p>Every shoe is 100% customizable. You can add any logo, color, or design on any surface of the shoe.</p></div>
+        </div>
+        <div class="oWhyA-feat">
+          <div class="feat-icon"><svg><use href="#icon-package"></use></svg></div>
+          <div><h3>No Minimum Order</h3><p>Order as few as 1 pair. Test designs, get samples, or outfit a small team without committing to a large batch.</p></div>
+        </div>
+        <div class="oWhyA-feat">
+          <div class="feat-icon"><svg><use href="#icon-zap"></use></svg></div>
+          <div><h3>Fast Turnaround</h3><p>From design approval to delivery in 2–3 weeks. We move fast so you can meet your deadlines.</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  </div>
+
+  <!-- ============================================================
+       SECTION 7 — VIDEO TESTIMONIALS (Portrait Cards)
+       ============================================================ -->
+  <section class="testi">
+    <div class="testi__inner">
+      <div class="testi__header" data-sz-reveal>
+        <h2 class="testi__heading">Hear from <em>Our Clients</em></h2>
+        <p class="testi__subheading">Real business owners share their experience working with Shoe Zero.</p>
+      </div>
+
+      <div class="testi__grid">
+        <!-- FlexPower -->
+        <div class="testi__card" data-sz-reveal>
+          <div class="testi__thumb-wrap">
+            <video class="testi__thumb" muted playsinline preload="metadata" poster="https://shoezero.com/cdn/shop/files/preview_images/9bc7192f47d14191b0fa2b34660dc8bf.thumbnail.0000000000_large.jpg?v=1709929308">
+              <source src="https://shoezero.com/cdn/shop/videos/c/vp/9bc7192f47d14191b0fa2b34660dc8bf/9bc7192f47d14191b0fa2b34660dc8bf.HD-1080p-7.2Mbps-25638442.mp4?v=0" type="video/mp4">
+            </video>
+            <div class="testi__scrim"></div>
+            <div class="testi__company">FlexPower</div>
+            <div class="testi__play"></div>
+            <div class="testi__quote">"Shoe Zero made it easy to create branded shoes for our entire team — the quality blew us away."</div>
+          </div>
+        </div>
+
+        <!-- RemotePass -->
+        <div class="testi__card" data-sz-reveal>
+          <div class="testi__thumb-wrap">
+            <video class="testi__thumb" muted playsinline preload="metadata" poster="https://shoezero.com/cdn/shop/files/preview_images/eda97c18cd1a45ffb55cbcd5e3e42977.thumbnail.0000000000_large.jpg?v=1709929316">
+              <source src="https://shoezero.com/cdn/shop/videos/c/vp/eda97c18cd1a45ffb55cbcd5e3e42977/eda97c18cd1a45ffb55cbcd5e3e42977.HD-1080p-7.2Mbps-25638443.mp4?v=0" type="video/mp4">
+            </video>
+            <div class="testi__scrim"></div>
+            <div class="testi__company">RemotePass</div>
+            <div class="testi__play"></div>
+            <div class="testi__quote">"We use these for employee onboarding gifts — everyone loves them from day one."</div>
+          </div>
+        </div>
+
+        <!-- Kita Zato -->
+        <div class="testi__card" data-sz-reveal>
+          <div class="testi__thumb-wrap">
+            <video class="testi__thumb" muted playsinline preload="metadata" poster="https://shoezero.com/cdn/shop/files/preview_images/1c2c69b0dfee413493fb87ef77903570.thumbnail.0000000000_large.jpg?v=1709929329">
+              <source src="https://shoezero.com/cdn/shop/videos/c/vp/1c2c69b0dfee413493fb87ef77903570/1c2c69b0dfee413493fb87ef77903570.HD-1080p-7.2Mbps-25638446.mp4?v=0" type="video/mp4">
+            </video>
+            <div class="testi__scrim"></div>
+            <div class="testi__company">Kita Zato</div>
+            <div class="testi__play"></div>
+            <div class="testi__quote">"The customization options are incredible — our customers can't stop talking about them."</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 9 — FAQ (Two-Column Masonry Grid — Option F)
+       ============================================================ -->
+  <section class="oFQ-section">
+    <div class="oFQ-wrap">
+      <div class="oFQ-header" data-sz-reveal>
+        <div class="oFQ-bar"></div>
+        <h2 class="oFQ-heading">Frequently Asked Questions</h2>
+        <p class="oFQ-sub">Find quick answers about ordering, production, and shipping custom shoes.</p>
+      </div>
+      <div class="oFQ-grid">
+        <div class="oFQ-item" data-sz-reveal><button class="oFQ-trigger" onclick="toggleFaqF(this)"><span class="oFQ-tag">Q1</span><span class="oFQ-q-text">What is the minimum order quantity?</span><span class="oFQ-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="oFQ-body"><div class="oFQ-body-inner">There's no minimum order. You can start with as few as 1 pair. This makes it easy to test designs, order samples, or outfit a small team without committing to a large batch.</div></div></div>
+        <div class="oFQ-item" data-sz-reveal><button class="oFQ-trigger" onclick="toggleFaqF(this)"><span class="oFQ-tag">Q2</span><span class="oFQ-q-text">How long does production take?</span><span class="oFQ-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="oFQ-body"><div class="oFQ-body-inner">Production takes approximately 10 business days from design approval. Shipping time varies by destination — most domestic orders arrive within 5-7 business days after production.</div></div></div>
+        <div class="oFQ-item" data-sz-reveal><button class="oFQ-trigger" onclick="toggleFaqF(this)"><span class="oFQ-tag">Q3</span><span class="oFQ-q-text">Can I see a sample before ordering in bulk?</span><span class="oFQ-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="oFQ-body"><div class="oFQ-body-inner">Absolutely. Since there's no minimum, you can order a single pair as a sample to verify quality, fit, and print accuracy before placing a larger order.</div></div></div>
+        <div class="oFQ-item" data-sz-reveal><button class="oFQ-trigger" onclick="toggleFaqF(this)"><span class="oFQ-tag">Q4</span><span class="oFQ-q-text">What shoe styles are available for customization?</span><span class="oFQ-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="oFQ-body"><div class="oFQ-body-inner">We offer 50+ styles including classic sneakers, high-tops, low-tops, slides, slip-ons, and boots. All styles support full-color, all-over printing on premium materials.</div></div></div>
+        <div class="oFQ-item" data-sz-reveal><button class="oFQ-trigger" onclick="toggleFaqF(this)"><span class="oFQ-tag">Q5</span><span class="oFQ-q-text">Do I need a designer to create my shoes?</span><span class="oFQ-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="oFQ-body"><div class="oFQ-body-inner">No. Our free online design tool lets anyone create professional-looking custom shoes. Just upload your logo or artwork, position it using the 3D preview, and you're ready to order.</div></div></div>
+        <div class="oFQ-item" data-sz-reveal><button class="oFQ-trigger" onclick="toggleFaqF(this)"><span class="oFQ-tag">Q6</span><span class="oFQ-q-text">Do you offer bulk pricing or corporate discounts?</span><span class="oFQ-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="oFQ-body"><div class="oFQ-body-inner">Yes! We offer tiered pricing for larger orders. Fill out the inquiry form with your estimated quantity, and our team will provide a custom quote within 24 hours.</div></div></div>
+        <div class="oFQ-item" data-sz-reveal style="grid-column: 1 / -1; max-width: calc(50% - 8px);"><button class="oFQ-trigger" onclick="toggleFaqF(this)"><span class="oFQ-tag">Q7</span><span class="oFQ-q-text">Can you ship internationally?</span><span class="oFQ-chevron"><svg viewBox="0 0 24 24" fill="none" stroke="#1a1a1a" stroke-width="2"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></button><div class="oFQ-body"><div class="oFQ-body-inner">Yes — we ship to 190+ countries worldwide. International shipping times vary by destination, typically 7-14 business days. We handle all customs documentation.</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SECTION 10 — CTA BANNER (Full-Width Green)
+       ============================================================ -->
+  <section class="oCTA-section">
+    <div class="oCTA-wrap">
+      <h2>Take the <strong>first step</strong> toward branded footwear</h2>
+      <a href="#b2bform" class="oCTA-cta">Get Started &rarr;</a>
+      <p class="oCTA-trust">No commitment required · Free design tools · Ships to 190+ countries</p>
+    </div>
+  </section>
+
+  <!-- === SCROLL REVEAL JS === -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+      document.querySelectorAll('[data-sz-reveal]').forEach(el => observer.observe(el));
+
+      // Marquee scroll distance (from sz-trusted-brands-v3.liquid)
+      (function() {
+        var track = document.querySelector('.sz-brands-track');
+        if (!track) return;
+        function measure() {
+          var imgs = track.querySelectorAll('img');
+          var half = imgs.length / 2;
+          if (half < 1 || !imgs[half]) return;
+          var offset = imgs[half].offsetLeft;
+          if (offset > 0) {
+            track.style.setProperty('--sz-scroll-distance', '-' + offset + 'px');
+          }
+        }
+        if (document.readyState === 'complete') measure();
+        else window.addEventListener('load', measure);
+        window.addEventListener('resize', measure);
+      })();
+
+      // Stats count-up animation
+      var countObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (!entry.isIntersecting) return;
+          var el = entry.target;
+          var target = parseInt(el.dataset.count);
+          var suffix = el.dataset.suffix || '+';
+          var duration = 3000;
+          var start = performance.now();
+
+          function tick(now) {
+            var progress = Math.min((now - start) / duration, 1);
+            var eased = 1 - Math.pow(1 - progress, 3);
+            var current = Math.floor(eased * target);
+            el.textContent = current.toLocaleString() + suffix;
+            if (progress < 1) requestAnimationFrame(tick);
+          }
+
+          requestAnimationFrame(tick);
+          countObserver.unobserve(el);
+        });
+      }, { threshold: 0.5 });
+
+      document.querySelectorAll('[data-count]').forEach(function(el) {
+        countObserver.observe(el);
+      });
+
+      // Testimonial videos — click to play with audio + controls
+      document.querySelectorAll('.testi__card').forEach(function(card) {
+        var video = card.querySelector('video');
+        var play = card.querySelector('.testi__play');
+        if (!video) return;
+        card.addEventListener('click', function() {
+          var scrim = card.querySelector('.testi__scrim');
+          var quote = card.querySelector('.testi__quote');
+          var company = card.querySelector('.testi__company');
+          if (video.paused) {
+            video.muted = false;
+            video.controls = true;
+            video.play().catch(function(){});
+            if (play) play.style.display = 'none';
+            if (scrim) scrim.style.display = 'none';
+            if (quote) quote.style.display = 'none';
+          } else {
+            video.pause();
+            video.controls = false;
+            if (play) play.style.display = 'flex';
+            if (scrim) scrim.style.display = '';
+            if (quote) quote.style.display = '';
+          }
+        });
+      });
+
+      // FAQ toggle (masonry grid)
+      window.toggleFaqF = function(btn) {
+        var item = btn.parentElement;
+        var body = item.querySelector('.oFQ-body');
+        var isOpen = item.classList.contains('open');
+        // Close all
+        document.querySelectorAll('.oFQ-item.open').forEach(function(el) {
+          el.classList.remove('open');
+          el.querySelector('.oFQ-body').style.maxHeight = null;
+          el.querySelector('.oFQ-trigger').setAttribute('aria-expanded', 'false');
+        });
+        if (!isOpen) {
+          item.classList.add('open');
+          body.style.maxHeight = body.scrollHeight + 'px';
+          btn.setAttribute('aria-expanded', 'true');
+        }
+      };
+
+      // Smooth scroll for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(link => {
+        link.addEventListener('click', e => {
+          e.preventDefault();
+          const target = document.querySelector(link.getAttribute('href'));
+          if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+      });
+    });
+  </script>
+
+</body>
+</html>
