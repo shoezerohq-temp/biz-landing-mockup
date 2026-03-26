@@ -161,14 +161,6 @@
     /* ============================================================
        NAV BAR (Simplified)
        ============================================================ */
-    .sz-nav { background: var(--sz-white); border-bottom: 1px solid #e5e5e5; position: sticky; top: 0; z-index: 100; }
-    .sz-nav__inner { max-width: var(--sz-max-width); margin: 0 auto; padding: 16px var(--sz-pad-x); display: flex; align-items: center; justify-content: space-between; }
-    .sz-nav__logo img { height: 32px; width: auto; }
-    .sz-nav__links { display: flex; align-items: center; gap: 32px; }
-    .sz-nav__links a { font-size: 14px; font-weight: 500; color: var(--sz-text-primary); text-decoration: none; transition: color 0.2s var(--sz-ease); }
-    .sz-nav__links a:hover { color: var(--sz-accent); }
-    .sz-nav__cta { padding: 10px 24px; font-size: 13px; font-weight: 600; background: var(--sz-accent); color: #fff; border-radius: var(--sz-radius-image); text-decoration: none; transition: transform 0.2s var(--sz-ease), box-shadow 0.2s var(--sz-ease); }
-    .sz-nav__cta:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,112,74,0.25); }
 
     /* ============================================================
        SECTION 1 — HERO
@@ -607,6 +599,7 @@
     .oCTA-section { background: var(--sz-accent); }
     .oCTA-wrap { max-width: 100%; margin: 0 auto; padding: 36px var(--sz-pad-x); text-align: center; }
     .oCTA-wrap h2 { font-size: clamp(28px, 4vw, 44px); font-weight: 800; letter-spacing: -0.02em; white-space: nowrap; color: #fff; margin-bottom: 24px; }
+    .oCTA-sub { font-size: 16px; color: rgba(255,255,255,0.75); margin-bottom: 28px; }
     .oCTA-cta { display: inline-flex; align-items: center; justify-content: center; padding: 16px 36px; font-size: 15px; font-weight: 700; font-family: inherit; background: var(--sz-black); color: #fff; border: none; border-radius: 9999px; cursor: pointer; text-decoration: none; transition: transform 0.3s var(--sz-ease), box-shadow 0.3s var(--sz-ease); }
     .oCTA-cta:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
     .oCTA-trust { margin-top: 24px; font-size: 13px; color: rgba(255,255,255,0.6); letter-spacing: 0.01em; }
@@ -647,24 +640,25 @@
         --sz-pad-x: 16px;
       }
 
-      .biz-hero { padding: 24px 0 16px; }
+      .biz-hero { padding: 0 0 16px; }
       .biz-hero__inner {
         grid-template-columns: 1fr;
         gap: 20px;
       }
-      .biz-hero__h1 { margin-top: 0; margin-bottom: 20px; }
+      .biz-hero__video-wrap { order: -1; }
+      .biz-hero__inner > div:first-child { align-items: center; text-align: center; }
+      .biz-hero__h1 { margin-top: 0; margin-bottom: 20px; font-size: clamp(28px, 7vw, 36px); }
       .biz-hero__card-stack {
         order: -1;
         max-width: 260px;
       }
-      .biz-hero__h1 {
-        font-size: clamp(28px, 7vw, 36px);
-      }
       .biz-hero__ctas {
-        flex-direction: column;
-        align-items: stretch;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
       }
-      .biz-hero__ctas .sz-btn { width: 100%; text-align: center; }
+      .biz-hero__ctas .sz-btn { text-align: center; }
+      .arrow-desktop { display: none; }
       .biz-hero__stats { gap: 24px; }
 
       .biz-stats__grid {
@@ -725,18 +719,6 @@
 <body>
 
   <!-- NAV BAR -->
-  <nav class="sz-nav">
-    <div class="sz-nav__inner">
-      <a href="https://shoezero.com" class="sz-nav__logo"><img src="https://cdn.shopify.com/s/files/1/0517/3195/5883/files/Shoe_zero_custom_shoe_logowebsite.png?v=1689026229&width=200" alt="Shoe Zero logo"></a>
-      <div class="sz-nav__links">
-        <a href="/collections/custom-shoes">Custom Shoes</a>
-        <a href="/pages/how-it-works">How It Works</a>
-        <a href="/blogs/blog">Blog</a>
-        <a href="/pages/contact">Contact</a>
-        <a href="#b2bform" class="sz-nav__cta">Get a Quote</a>
-      </div>
-    </div>
-  </nav>
 
   <!-- ============================================================
        SECTION 1 — HERO
@@ -751,7 +733,7 @@
 
           <div class="biz-hero__ctas">
             <a href="#b2bform" class="sz-btn sz-btn--primary">Talk to Our Team</a>
-            <a href="#how-it-works" class="sz-btn sz-btn--text">See How It Works &rarr;</a>
+            <a href="#how-it-works" class="sz-btn sz-btn--text">See How It Works <span class="arrow-desktop">&rarr;</span></a>
           </div>
 
         </div>
@@ -1038,9 +1020,9 @@
        ============================================================ -->
   <section class="oCTA-section">
     <div class="oCTA-wrap">
-      <h2>Take the <strong>first step</strong> toward branded footwear</h2>
+      <h2>Not sure where to start? <strong>Start with a mockup</strong></h2>
+      <p class="oCTA-sub">Send us your logo and we'll show you what your shoes will look like</p>
       <a href="#b2bform" class="oCTA-cta">Talk to Us &rarr;</a>
-      <p class="oCTA-trust">No commitment required · Free design tools · Ships to 190+ countries</p>
     </div>
   </section>
 
