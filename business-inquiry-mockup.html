@@ -505,7 +505,7 @@
     .testi__heading em { font-style: normal; color: var(--sz-accent); }
     .testi__subheading {
       font-size: 15px; color: #888; line-height: 1.6;
-      max-width: 600px; margin: 0 auto;
+      max-width: 600px; margin: 0 auto 32px;
     }
     .testi__grid { display: grid; grid-template-columns: 1fr 1.1fr 1fr; gap: 20px; align-items: start; }
     .testi__grid > :nth-child(2) { margin-top: -20px; }
@@ -548,7 +548,7 @@
        SECTION 4 — INQUIRY FORM (Asymmetric Overlap — Option C)
        ============================================================ */
     .oC-form-wrap { max-width: 1200px; margin: 0 auto; padding: var(--sz-section-py) var(--sz-pad-x); }
-    .oC-container { position: relative; display: grid; grid-template-columns: 1.35fr 1fr; gap: 24px; min-height: 560px; }
+    .oC-container { position: relative; display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; min-height: 560px; }
     .oC-left { display: flex; flex-direction: column; }
     .oC-media { border-radius: var(--sz-radius-hero-image); overflow: hidden; position: relative; background: var(--sz-bg-warm); flex: 1; }
     .oC-media img { width: 130%; height: 130%; object-fit: cover; object-position: 25% 20%; }
@@ -605,8 +605,8 @@
        SECTION 10 — CTA BANNER (Full-Width Green)
        ============================================================ */
     .oCTA-section { background: var(--sz-accent); }
-    .oCTA-wrap { max-width: 800px; margin: 0 auto; padding: 36px var(--sz-pad-x); text-align: center; }
-    .oCTA-wrap h2 { font-size: clamp(28px, 4vw, 44px); font-weight: 800; letter-spacing: -0.02em; text-wrap: balance; color: #fff; margin-bottom: 24px; }
+    .oCTA-wrap { max-width: 100%; margin: 0 auto; padding: 36px var(--sz-pad-x); text-align: center; }
+    .oCTA-wrap h2 { font-size: clamp(28px, 4vw, 44px); font-weight: 800; letter-spacing: -0.02em; white-space: nowrap; color: #fff; margin-bottom: 24px; }
     .oCTA-cta { display: inline-flex; align-items: center; justify-content: center; padding: 16px 36px; font-size: 15px; font-weight: 700; font-family: inherit; background: var(--sz-black); color: #fff; border: none; border-radius: 9999px; cursor: pointer; text-decoration: none; transition: transform 0.3s var(--sz-ease), box-shadow 0.3s var(--sz-ease); }
     .oCTA-cta:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.3); }
     .oCTA-trust { margin-top: 24px; font-size: 13px; color: rgba(255,255,255,0.6); letter-spacing: 0.01em; }
@@ -915,6 +915,7 @@
   <!-- SVG icon sprite -->
   <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
     <symbol id="icon-pen" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"></path></symbol>
+    <symbol id="icon-headset" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18v-6a9 9 0 0118 0v6"></path><path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3z"></path></symbol>
     <symbol id="icon-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"></path></symbol>
     <symbol id="icon-palette" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="13.5" cy="6.5" r="0.5" fill="currentColor"></circle><circle cx="17.5" cy="10.5" r="0.5" fill="currentColor"></circle><circle cx="8.5" cy="7.5" r="0.5" fill="currentColor"></circle><circle cx="6.5" cy="12" r="0.5" fill="currentColor"></circle><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 011.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.555C21.965 6.012 17.461 2 12 2z"></path></symbol>
     <symbol id="icon-package" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16.5 9.4l-9-5.19M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"></path><path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"></path></symbol>
@@ -929,11 +930,11 @@
     <div class="oWhyA-grid">
       <div class="oWhyA-left">
         <h2 class="oWhyA-heading">Why Team Up With <em>Shoe Zero</em></h2>
-        <div class="oWhyA-img"><img src="/Users/benedictxyryl/Downloads/ShoeZero-Assets/SZ Asset GDrive/Photos and Videos/Business Shoe Photos/Best Ones/SMA/SMA 3.jpeg" alt="SMA branded shoe boxes stacked at event" loading="lazy"></div>
+        <div class="oWhyA-img"><img src="assets/sma-shoe-tree.jpeg" alt="SMA branded shoe boxes stacked at event" loading="lazy"></div>
       </div>
       <div class="oWhyA-features">
         <div class="oWhyA-feat">
-          <div class="feat-icon"><svg><use href="#icon-pen"></use></svg></div>
+          <div class="feat-icon"><svg><use href="#icon-headset"></use></svg></div>
           <div><h3>Dedicated Design Support</h3><p>You don't need a designer on your end. Our team builds the concept and works with you until it's right.</p></div>
         </div>
         <div class="oWhyA-feat">
@@ -1038,7 +1039,7 @@
   <section class="oCTA-section">
     <div class="oCTA-wrap">
       <h2>Take the <strong>first step</strong> toward branded footwear</h2>
-      <a href="#b2bform" class="oCTA-cta">Get Started &rarr;</a>
+      <a href="#b2bform" class="oCTA-cta">Talk to Us &rarr;</a>
       <p class="oCTA-trust">No commitment required · Free design tools · Ships to 190+ countries</p>
     </div>
   </section>
