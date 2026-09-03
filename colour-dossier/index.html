@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Colour Problems Dossier</title>
+<style>
+  body { background:#f7f7f5; color:#1a1a1a; font-family: -apple-system, Helvetica, Arial, sans-serif; margin:0; padding:40px 24px; }
+  .wrap { max-width:1200px; margin:0 auto; }
+  h1 { font-size:28px; font-weight:800; margin-bottom:4px; }
+  .sub { color:#777; margin-bottom:32px; }
+  table.summary { width:100%; border-collapse:collapse; background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 1px 2px rgba(0,0,0,0.04),0 4px 12px rgba(0,0,0,0.06); margin-bottom:40px; }
+  table.summary th, table.summary td { padding:10px 12px; text-align:left; border-bottom:1px solid #eee; font-size:14px; vertical-align:top; }
+  table.summary th { background:#00704a; color:#fff; font-weight:700; }
+  .cards { display:grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); gap:20px; }
+  .card { background:#fff; border-radius:12px; padding:20px; box-shadow:0 1px 2px rgba(0,0,0,0.04),0 4px 12px rgba(0,0,0,0.06); }
+  .card h2 { margin:0 0 4px; font-size:18px; font-weight:800; }
+  .card .meta { color:#777; font-size:13px; margin-bottom:12px; }
+  .card .meta a { color:#00704a; }
+  .pair { display:flex; gap:8px; margin-bottom:8px; }
+  .pair .slot { flex:1; min-width:0; }
+  .pair .slot .label { font-size:11px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; background:#00704a; color:#fff; text-align:center; padding:4px 0; border-radius:6px 6px 0 0; }
+  .pair .slot img { width:100%; height:220px; object-fit:contain; background:#f0f0f0; border-radius:0 0 8px 8px; display:block; }
+  .pair .slot .pending { width:100%; height:220px; background:#f0f0f0; color:#777; font-size:12px; display:flex; align-items:center; justify-content:center; text-align:center; border-radius:0 0 8px 8px; padding:8px; box-sizing:border-box; }
+  .swatchimg { width:100%; border-radius:8px; margin-bottom:10px; display:block; }
+  .problem { font-size:14px; margin:8px 0 0; line-height:1.5; }
+  .problem b { color:#00704a; }
+  .chip { display:inline-flex; align-items:center; gap:4px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size:12.5px; background:#f0f0f0; border-radius:5px; padding:1px 6px 1px 3px; white-space:nowrap; }
+  .chip .sw { width:14px; height:14px; border-radius:3px; border:1px solid rgba(0,0,0,0.15); display:inline-block; }
+  .tag { display:inline-block; font-size:11px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; padding:3px 8px; border-radius:6px; background:#f0f0f0; color:#555; margin-right:6px; margin-bottom:8px; }
+  h2.section { margin-top:48px; font-size:22px; font-weight:800; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Colour Problems Dossier</h1>
+  <p class="sub">Every colour complaint we have on record, one case per order. Each card shows what the customer expected against what printed, the hex values involved, and a plain-English read of what went wrong. Design links point to the live design tool, use the model and config ID to pull up the exact colours.</p>
+
+  <table class="summary">
+    <tr><th>Order</th><th>Model</th><th>Problem colour</th><th>Reference colour</th><th>What went wrong</th></tr>
+    <tr><td>#6066</td><td>Core Zero Low Tops</td><td><span class="chip"><span class="sw" style="background:#c790fe"></span>#c790fe</span> (arrows)</td><td><span class="chip"><span class="sw" style="background:#ab51ff"></span>#ab51ff</span> (body)</td><td>Printed pink instead of purple, two purples on one shoe split into visibly different colours</td></tr>
+    <tr><td>#5310</td><td>Core Zero Low Tops</td><td><span class="chip"><span class="sw" style="background:#00599a"></span>#00599a</span> (heel)</td><td><span class="chip"><span class="sw" style="background:#014997"></span>#014997</span> (rest of shoe)</td><td>One panel printed a visibly lighter blue than the rest of the shoe</td></tr>
+    <tr><td>#6124 / #6133</td><td>Core Zero Low Tops</td><td><span class="chip"><span class="sw" style="background:#8e77fb"></span>#8e77fb</span> printed darker</td><td>n/a, fluorescent tone not reproducible</td><td>Fluorescent purple sits outside what standard printing can reproduce</td></tr>
+    <tr><td>#5570</td><td>Core Zero Low Tops</td><td><span class="chip"><span class="sw" style="background:#edefed"></span>#edefed</span> vs <span class="chip"><span class="sw" style="background:#ffffff;border:1px solid #ccc"></span>#ffffff</span></td><td>n/a, ambiguous near-white pair</td><td>Left and right shoe rendered two different off-whites</td></tr>
+    <tr><td>#5389</td><td>Classic Zero</td><td>gradient inside uploaded artwork, no flat hex</td><td>n/a</td><td>Gradients print unpredictably, flagged before production</td></tr>
+    <tr><td>order not on file</td><td>not on file</td><td>thin navy lines</td><td>recommended white, higher contrast</td><td>Lines under 1mm wide dropped out at print resolution</td></tr>
+    <tr><td>12 orders (batch)</td><td>Core Zero Low Tops / Classic Zero</td><td>see cards below</td><td>n/a</td><td>Mixed: near-white drift, faded pinks, olive/beige shift</td></tr>
+  </table>
+
+  <div class="cards">
+
+    <div class="card">
+      <span class="tag">Reprinted, 4 pairs</span>
+      <h2>Order #6066, Purple Body vs Pink Arrows</h2>
+      <div class="meta">Core Zero Low Tops &middot; configs 399259 / 399257 &middot; <a href="https://shoezero.com/pages/share-design/?model=court-zero-lowtop&configId=399259">design link</a></div>
+      <div class="pair">
+        <div class="slot"><div class="label">Expected</div><img src="case-6066/mockup-399259.jpg" alt="Expected mockup"></div>
+        <div class="slot"><div class="label">Printed</div><img src="case-6066/photo-final.jpg" alt="Printed pair"></div>
+      </div>
+      <img class="swatchimg" src="case-6066/swatch.png" alt="Hex swatch">
+      <p class="problem"><b>Problem:</b> body and arrow panels used two different purples, <span class="chip"><span class="sw" style="background:#ab51ff"></span>#ab51ff</span> for the body and <span class="chip"><span class="sw" style="background:#c790fe"></span>#c790fe</span> for the arrow accent. On the printed shoe the arrows read as pink rather than a matching purple, so the two panels that should read as one purple family split into two visibly different colours. Four pairs were reprinted once photos confirmed the mismatch.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag">Reprinted</span>
+      <h2>Order #5310, Heel Panel Wrong Blue</h2>
+      <div class="meta">Core Zero Low Tops &middot; config 310212 &middot; <a href="https://shoezero.com/pages/share-design/?model=court-zero-lowtop&configId=310212">design link</a></div>
+      <div class="pair">
+        <div class="slot"><div class="label">Expected</div><img src="case-5310/mockup-310212.jpg" alt="Expected mockup"></div>
+        <div class="slot"><div class="label">Printed</div><img src="case-5310/photo-final.jpg" alt="Printed pair"></div>
+      </div>
+      <img class="swatchimg" src="case-5310/swatch.png" alt="Hex swatch">
+      <p class="problem"><b>Problem:</b> the heel back-piece panel was set to <span class="chip"><span class="sw" style="background:#00599a"></span>#00599a</span>, a lighter blue, while every other blue panel on the shoe (laces, toe, tongue, upper heel) used <span class="chip"><span class="sw" style="background:#014997"></span>#014997</span>, a darker blue. The heel printed visibly lighter than the rest of the shoe instead of matching. The panel was reprinted to match the darker blue used everywhere else.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag">Unresolved, colour range limit</span>
+      <h2>Orders #6124 / #6133, Fluorescent Purple Printed Darker</h2>
+      <div class="meta">Core Zero Low Tops &middot; config 405766 (order #6133) &middot; <a href="https://shoezero.com/pages/share-design/?model=court-zero-lowtop&configId=405766">design link</a> &middot; order #6124 has no design file on record</div>
+      <div class="pair">
+        <div class="slot"><div class="label">Expected</div><img src="case-6133/mockup-405766.jpg" alt="Expected mockup"></div>
+        <div class="slot"><div class="label">Printed</div><img src="case-6133/photo-final.jpg" alt="Printed pair"></div>
+      </div>
+      <img class="swatchimg" src="case-6133/swatch.png" alt="Hex swatch">
+      <p class="problem"><b>Problem:</b> the design called for a light, slightly fluorescent purple at <span class="chip"><span class="sw" style="background:#8e77fb"></span>#8e77fb</span>. The printed sample came back visibly darker and flatter than the on-screen colour. Fluorescent tones like this sit outside the colour range that standard printing (RGB screen colour translated to a printer's ink set) can reproduce, so an exact match is not achievable with normal equipment, only a closer approximation. This is a colour-gamut limit, not a one-off printing mistake.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag">Resolved, printed all white</span>
+      <h2>Order #5570, Off-White vs White Split</h2>
+      <div class="meta">Core Zero Low Tops &middot; config 364195 &middot; <a href="https://shoezero.com/pages/share-design/?model=court-zero-lowtop&configId=364195">design link</a></div>
+      <div class="pair">
+        <div class="slot"><div class="label">Expected</div><img src="case-5570/mockup-364195.jpg" alt="Expected mockup"></div>
+        <div class="slot"><div class="label">Printed</div><div class="pending">Photo of printed pair to follow</div></div>
+      </div>
+      <img class="swatchimg" src="case-5570/swatch.png" alt="Hex swatch">
+      <p class="problem"><b>Problem:</b> one side of the shoe carried <span class="chip"><span class="sw" style="background:#edefed"></span>#edefed</span>, a warm grey-white, and the other side pure <span class="chip"><span class="sw" style="background:#ffffff;border:1px solid #ccc"></span>#ffffff</span> white. These two near-white shades are easy to confuse in a colour picker and on a screen, but print as two clearly different whites side by side on the same pair. This was caught before production and confirmed the pair should print all white. No camera photo of the finished pair is on file, every attachment on this order's record is either a design render or an unrelated cut-pattern sheet.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag">Resolved, design changed</span>
+      <h2>Order #5389, Gradient Flagged Unpredictable</h2>
+      <div class="meta">Classic Zero &middot; config 331656 &middot; <a href="https://shoezero.com/pages/share-design/?model=classic-zero&configId=331656">design link</a></div>
+      <div class="pair">
+        <div class="slot"><div class="label">Expected</div><img src="case-5389/mockup-331656.jpg" alt="Expected mockup"></div>
+        <div class="slot"><div class="label">Printed</div><div class="pending">Photo of printed pair to follow</div></div>
+      </div>
+      <img class="swatchimg" src="case-5389/swatch.png" alt="Panel colours"><p class="note">The gradient itself is inside the customer's uploaded artwork, not a panel colour, so there is no single hex for it. The two panel colours above are the shoe's flat fills.</p>
+      <p class="problem"><b>Problem:</b> the design used a colour gradient, a smooth blend between shades rather than one flat hex fill. Gradients shift and band unpredictably on print because small variations in ink lay-down show up more on a blend than on a flat colour. This was flagged before production and the design was revised to a flat colour instead. Both attachments on this order's record are studio renders, not camera photos, so no printed-pair photo is included here.</p>
+    </div>
+
+    <div class="card">
+      <span class="tag">Resolved, redesigned</span>
+      <h2>Order not on file, Lines Under 1mm Dropped</h2>
+      <div class="meta">Model and config not on record for this order</div>
+      <div class="pair">
+        <div class="slot"><div class="label">Expected</div><div class="pending">design file not available</div></div>
+        <div class="slot"><div class="label">Printed</div><img src="case-cmhemrqw/photo.jpg" alt="Printed detail showing thin lines"></div>
+      </div>
+      <img class="swatchimg" src="case-cmhemrqw/swatch.png" alt="Navy vs white contrast swatch">
+      <p class="problem"><b>Problem:</b> this is a line-weight failure rather than a wrong-colour failure, included here because thin lines and colour contrast are closely related print issues. Some artwork lines measured under 1mm wide and would not render cleanly at the print resolution used. Fix: thicken fine lines and raise contrast against the background, for example switching thin line art to white on a dark panel instead of a colour close to the background.</p>
+    </div>
+
+  </div>
+
+  <h2 class="section">Batch of 12 Orders Flagged Wrong</h2>
+  <p class="sub">A review pass across a run of orders found these 12 pairs where the printed colour did not match the design (the rest of that run checked out once hex values were compared directly).</p>
+
+  <div class="cards">
+
+    <div class="card">
+      <h2>Order #5554</h2>
+      <div class="meta">Core Zero Low Tops &middot; config 364003 &middot; <a href="https://shoezero.com/pages/share-design/?model=court-zero-lowtop&configId=364003">design link</a></div>
+      <div class="pair"><div class="slot"><div class="label">Expected</div><img src="case-qa-sheet/5554-expected-final.jpg"></div><div class="slot"><div class="label">Printed</div><img src="case-qa-sheet/5554-photo-final.jpg"></div></div>
+      <img class="swatchimg" src="case-qa-sheet/5554-swatch.png">
+      <p class="problem"><b>Problem:</b> the purple panel, <span class="chip"><span class="sw" style="background:#1e1965"></span>#1e1965</span>, printed a visibly different purple than the design.</p>
+    </div>
+
+    <div class="card">
+      <h2>Order #5559</h2>
+      <div class="meta">Core Zero Low Tops &middot; config 364182 &middot; <a href="https://shoezero.com/pages/share-design/?model=court-zero-lowtop&configId=364182">design link</a></div>
+      <div class="pair"><div class="slot"><div class="label">Expected</div><img src="case-qa-sheet/5559-expected-final.jpg"></div><div class="slot"><div class="label">Printed</div><img src="case-qa-sheet/5559-photo-final.jpg"></div></div>
+      <img class="swatchimg" src="case-qa-sheet/5559-swatch.png">
+      <p class="problem"><b>Problem:</b> a five-colour palette, <span class="chip"><span class="sw" style="background:#00adbd"></span>#00adbd</span> <span class="chip"><span class="sw" style="background:#012758"></span>#012758</span> <span class="chip"><span class="sw" style="background:#01afac"></span>#01afac</span> <span class="chip"><span class="sw" style="background:#f97272"></span>#f97272</span> <span class="chip"><span class="sw" style="background:#ffe5b4"></span>#ffe5b4</span>, printed with visible mismatches across multiple panels rather than one isolated colour.</p>
+    </div>
+
+    <div class="card">
+      <h2>Order #5563</h2>
+      <div class="meta">Core Zero Low Tops &middot; config 364187 &middot; <a href="https://shoezero.com/pages/share-design/?model=court-zero-lowtop&configId=364187">design link</a></div>
+      <div class="pair"><div class="slot"><div class="label">Expected</div><img src="case-qa-sheet/5563-expected-final.jpg"></div><div class="slot"><div class="label">Printed</div><img src="case-qa-sheet/5563-photo-final.jpg"></div></div>
+      <img class="swatchimg" src="case-qa-sheet/5563-swatch.png">
+      <p class="problem"><b>Problem:</b> the full panel set (<span class="chip"><span class="sw" style="background:#00599a"></span>#00599a</span> <span class="chip"><span class="sw" style="background:#007c64"></span>#007c64</span> <span class="chip"><span class="sw" style="background:#01afac"></span>#01afac</span> <span class="chip"><span class="sw" style="background:#3b607a"></span>#3b607a</span> <span class="chip"><span class="sw" style="background:#545252"></span>#545252</span> <span class="chip"><span class="sw" style="background:#edefed"></span>#edefed</span>) printed faded compared to the design, a flatter, lower-contrast overall print rather than one wrong hex.</p>
+    </div>
+
+    <div class="card">
+      <h2>Order #5574</h2>
+      <div class="meta">Core Zero Low Tops &middot; config 364200 &middot; <a href="https://shoezero.com/pages/share-design/?model=court-zero-lowtop&configId=364200">design link</a></div>
+      <div class="pair"><div class="slot"><div class="label">Expected</div><img src="case-qa-sheet/5574-expected-final.jpg"></div><div class="slot"><div class="label">Printed</div><img src="case-qa-sheet/5574-photo-final.jpg"></div></div>
+      <img class="swatchimg" src="case-qa-sheet/5574-swatch.png">
+      <p class="problem"><b>Problem:</b> the coral and pink panel colours (<span class="chip"><span class="sw" style="background:#ef7a54"></span>#ef7a54</span> <span class="chip"><span class="sw" style="background:#ffbbb0"></span>#ffbbb0</span> <span class="chip"><span class="sw" style="background:#ffdcd6"></span>#ffdcd6</span>) printed duller and less saturated than the design.</p>
+    </div>
+
+    <div class="card">
+      <h2>Order #5576</h2>
+      <div class="meta">Classic Zero &middot; config 364203 &middot; <a href="https://shoezero.com/pages/share-design/?model=classic-zero&configId=364203">design link</a></div>
+      <div class="pair"><div class="slot"><div class="label">Expected</div><img src="case-qa-sheet/5576-expected-final.jpg"></div><div class="slot"><div class="label">Printed</div><img src="case-qa-sheet/5576-photo-final.jpg"></div></div>
+      <img class="swatchimg" src="case-qa-sheet/5576-swatch.png">
+      <p class="problem"><b>Problem:</b> yellow/gold panels (<span class="chip"><span class="sw" style="background:#edb937"></span>#edb937</span> <span class="chip"><span class="sw" style="background:#ffc323"></span>#ffc323</span>) and grey <span class="chip"><span class="sw" style="background:#545252"></span>#545252</span> printed noticeably different from the design.</p>
+    </div>
+
+    <div class="card">
+      <h2>Order #5590</h2>
+      <div class="meta">Core Zero Low Tops &middot; config 364221 &middot; <a href="https://shoezero.com/pages/share-design/?model=court-zero-lowtop&configId=364221">design link</a></div>
+      <div class="pair"><div class="slot"><div class="label">Expected</div><img src="case-qa-sheet/5590-expected-final.jpg"></div><div class="slot"><div class="label">Printed</div><img src="case-qa-sheet/5590-photo-final.jpg"></div></div>
+      <img class="swatchimg" src="case-qa-sheet/5590-swatch.png">
+      <p class="problem"><b>Problem:</b> the blue panel <span class="chip"><span class="sw" style="background:#3b607a"></span>#3b607a</span> printed as a visibly different blue than the design, alongside the gold panel <span class="chip"><span class="sw" style="background:#edb937"></span>#edb937</span>.</p>
+    </div>
+
+    <div class="card">
+      <h2>Order #5592</h2>
+      <div class="meta">Classic Zero &middot; config 364224 &middot; <a href="https://shoezero.com/pages/share-design/?model=classic-zero&configId=364224">design link</a></div>
+      <div class="pair"><div class="slot"><div class="label">Expected</div><img src="case-qa-sheet/5592-expected-final.jpg"></div><div class="slot"><div class="label">Printed</div><img src="case-qa-sheet/5592-photo-final.jpg"></div></div>
+      <img class="swatchimg" src="case-qa-sheet/5592-swatch.png">
+      <p class="problem"><b>Problem:</b> the tan panel <span class="chip"><span class="sw" style="background:#958261"></span>#958261</span> printed with an olive cast against the <span class="chip"><span class="sw" style="background:#edefed"></span>#edefed</span> base colour.</p>
+    </div>
+
+    <div class="card">
+      <h2>Order #5594</h2>
+      <div class="meta">Core Zero Low Tops &middot; config 364228 &middot; <a href="https://shoezero.com/pages/share-design/?model=court-zero-lowtop&configId=364228">design link</a></div>
+      <div class="pair"><div class="slot"><div class="label">Expected</div><img src="case-qa-sheet/5594-expected-final.jpg"></div><div class="slot"><div class="label">Printed</div><img src="case-qa-sheet/5594-photo-final.jpg"></div></div>
+      <img class="swatchimg" src="case-qa-sheet/5594-swatch.png">
+      <p class="problem"><b>Problem:</b> the pink panel <span class="chip"><span class="sw" style="background:#d178aa"></span>#d178aa</span> printed the wrong shade of pink.</p>
+    </div>
+
+    <div class="card">
+      <h2>Order #5595</h2>
+      <div class="meta">Classic Zero &middot; config 364231 &middot; <a href="https://shoezero.com/pages/share-design/?model=classic-zero&configId=364231">design link</a></div>
+      <div class="pair"><div class="slot"><div class="label">Expected</div><img src="case-qa-sheet/5595-expected-final.jpg"></div><div class="slot"><div class="label">Printed</div><img src="case-qa-sheet/5595-photo-final.jpg"></div></div>
+      <img class="swatchimg" src="case-qa-sheet/5595-swatch.png">
+      <p class="problem"><b>Problem:</b> the same pink hex, <span class="chip"><span class="sw" style="background:#d178aa"></span>#d178aa</span>, printed wrong again on a different order, alongside <span class="chip"><span class="sw" style="background:#edefed"></span>#edefed</span> and pale pink <span class="chip"><span class="sw" style="background:#f8cedd"></span>#f8cedd</span>. This hex has now failed on two separate orders.</p>
+    </div>
+
+    <div class="card">
+      <h2>Order #5598</h2>
+      <div class="meta">Core Zero Low Tops &middot; config 364235 &middot; <a href="https://shoezero.com/pages/share-design/?model=court-zero-lowtop&configId=364235">design link</a></div>
+      <div class="pair"><div class="slot"><div class="label">Expected</div><img src="case-qa-sheet/5598-expected-final.jpg"></div><div class="slot"><div class="label">Printed</div><img src="case-qa-sheet/5598-photo-final.jpg"></div></div>
+      <img class="swatchimg" src="case-qa-sheet/5598-swatch.png">
+      <p class="problem"><b>Problem:</b> teal <span class="chip"><span class="sw" style="background:#007c64"></span>#007c64</span> and orange <span class="chip"><span class="sw" style="background:#ef4e0e"></span>#ef4e0e</span> printed poorly against the <span class="chip"><span class="sw" style="background:#edefed"></span>#edefed</span> base, a general mismatch across the pair rather than one bad panel.</p>
+    </div>
+
+    <div class="card">
+      <h2>Order #5599</h2>
+      <div class="meta">Core Zero Low Tops &middot; config 364237 &middot; <a href="https://shoezero.com/pages/share-design/?model=court-zero-lowtop&configId=364237">design link</a></div>
+      <div class="pair"><div class="slot"><div class="label">Expected</div><img src="case-qa-sheet/5599-expected-final.jpg"></div><div class="slot"><div class="label">Printed</div><img src="case-qa-sheet/5599-photo-final.jpg"></div></div>
+      <img class="swatchimg" src="case-qa-sheet/5599-swatch.png">
+      <p class="problem"><b>Problem:</b> the tan panel <span class="chip"><span class="sw" style="background:#d6c59c"></span>#d6c59c</span> against <span class="chip"><span class="sw" style="background:#edefed"></span>#edefed</span> printed faded and did not match the design.</p>
+    </div>
+
+    <div class="card">
+      <h2>Order #5602</h2>
+      <div class="meta">Classic Zero &middot; config 364241 &middot; <a href="https://shoezero.com/pages/share-design/?model=classic-zero&configId=364241">design link</a></div>
+      <div class="pair"><div class="slot"><div class="label">Expected</div><img src="case-qa-sheet/5602-expected-final.jpg"></div><div class="slot"><div class="label">Printed</div><img src="case-qa-sheet/5602-photo-final.jpg"></div></div>
+      <img class="swatchimg" src="case-qa-sheet/5602-swatch.png">
+      <p class="problem"><b>Problem:</b> tan/beige tones (<span class="chip"><span class="sw" style="background:#9f917a"></span>#9f917a</span> <span class="chip"><span class="sw" style="background:#c7c1b8"></span>#c7c1b8</span>) against <span class="chip"><span class="sw" style="background:#edefed"></span>#edefed</span> printed with an olive cast, the same failure pattern seen on order #5592.</p>
+    </div>
+
+  </div>
+
+  <p class="sub" style="margin-top:32px;">Pattern across the 12-order batch: the near-white <span class="chip"><span class="sw" style="background:#edefed"></span>#edefed</span> appears in 6 of the 12 flagged orders, pink <span class="chip"><span class="sw" style="background:#d178aa"></span>#d178aa</span> failed on two separate orders, and beige/olive tones shift the most visibly on print. The batch covers Core Zero Low Tops and Classic Zero only.</p>
+
+</div>
+</body>
+</html>
