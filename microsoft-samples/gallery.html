@@ -4,7 +4,7 @@
      Arrows/keys/swipe = sides of this shoe. No previous / next design buttons (Benedict, Oct 21). Empty slots link to an empty shoe.
      Edit mode (Benedict, Oct 21: "I should be able to edit the links of 3d"): when the server on his Mac answers (scripts/serve.py,
      /api/ping, also reached from the PUBLIC page at http://localhost:8791), each design gets "Change 3D link", each empty slot a paste
-     box, and the header a Publish button. Anyone else (Conrad) sees none. A save made from the public page publishes itself. -->
+     box, and the header a Publish button. Oct 22 01:20 (Benedict): the public page never shows them, it is what Conrad gets; edit on localhost. -->
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Microsoft Final Designs</title>
@@ -288,7 +288,8 @@ async function saveLink(key, url, name, msg) {
   if (!LOCAL) { msg.className = 'msg ok'; msg.textContent = r.published ? 'Saved and published. Waiting for the page to update...' : ('Saved, but publishing failed: ' + (r.message || '')); if (r.published) await waitForPublish(msg); else return; }
   location.hash = ''; location.reload();
 }
-fetch(API + '/api/ping', {cache: 'no-store'}).then(r => r.ok && r.json()).then(j => { if (j && j.ok) document.body.classList.add('local'); }).catch(() => {});
+// Benedict, Oct 22 01:20: the online page is what Conrad gets, so it never shows edit controls; editing lives on http://localhost:8791 only.
+if (LOCAL) fetch(API + '/api/ping', {cache: 'no-store'}).then(r => r.ok && r.json()).then(j => { if (j && j.ok) document.body.classList.add('local'); }).catch(() => {});
 if (!LOCAL) fetch(location.pathname + '?n=' + Date.now(), {cache: 'no-store'}).then(r => r.text()).then(t => { pageNow = t; }).catch(() => {});
 $('v-edit').onclick = () => { const f = $('v-form'), d = flat[di]; f.hidden = !f.hidden; $('v-url').value = d.url || ''; $('v-nm').value = d.short || ''; $('v-msg').textContent = ''; if (!f.hidden) $('v-url').focus(); };
 $('v-form').onsubmit = e => { e.preventDefault(); saveLink(flat[di].key, $('v-url').value, $('v-nm').value, $('v-msg')); };
