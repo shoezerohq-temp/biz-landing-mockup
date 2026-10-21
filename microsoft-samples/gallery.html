@@ -1,0 +1,221 @@
+<!doctype html>
+<!-- Design gallery page (Benedict, 2026-10-20, T-012). gallery.py fills /*DATA*/ and 9; edit the look here, the design list in gallery.py.
+     Grid of shoes -> click -> viewer with every side. Arrows/keys/swipe = sides of this shoe; up/down or the header buttons = other shoes. -->
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Microsoft Sample Designs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1a1a1a; --muted:#666; --line:#e5e5e5; --ground:#f0f0f0; --paper:#fff; --accent:#00704a; --accent-soft:#e6f2ed;
+  --r-card:12px; --r-panel:16px; --r-btn:8px;
+  --shadow:0 1px 2px rgba(26,26,26,.06),0 6px 16px rgba(26,26,26,.07),0 20px 40px rgba(26,26,26,.08);
+  --ease:cubic-bezier(0.22,1,0.36,1);
+  --font:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scrollbar-gutter:stable;-webkit-text-size-adjust:100%}
+html.locked{overflow:hidden}
+body{margin:0;font:400 15px/1.5 var(--font);color:var(--ink);background:var(--ground);-webkit-font-smoothing:antialiased}
+::selection{background:var(--accent-soft);color:var(--ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+img{display:block;max-width:100%}
+button{font:inherit;color:inherit}
+
+.page{max-width:none;margin:0;padding:20px 16px 40px}   /* Benedict Oct 20: less margins */
+.intro{margin:0 0 20px}
+h1{margin:0;font-weight:800;font-size:clamp(28px,3.2vw,44px);line-height:1.1;letter-spacing:-0.02em;text-wrap:balance}
+.intro p{margin:10px 0 0;color:var(--muted);font-size:16px}
+
+.group{margin:0 0 24px}
+.group-h{display:flex;align-items:baseline;gap:12px;margin:0 0 8px}
+.group-h h2{margin:0;font-weight:800;font-size:22px;letter-spacing:-0.02em}
+.group-h span{color:var(--muted);font-size:14px;font-variant-numeric:tabular-nums}
+.grid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:10px;list-style:none;margin:0;padding:0}
+
+.tile{display:flex;flex-direction:column;height:100%;background:var(--paper);border-radius:var(--r-card);padding:6px 6px 8px;
+  text-decoration:none;color:var(--ink);transition:transform 300ms var(--ease),box-shadow 300ms var(--ease)}
+.tile:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.tile:active{transform:translateY(0)}
+.tile .pic{aspect-ratio:4/3;min-height:0;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.tile img{width:100%;height:100%;object-fit:contain}
+.tile .cap{display:flex;gap:6px;margin-top:4px;font-size:13px;line-height:1.3;font-weight:600}
+.tile .num{color:var(--muted);font-weight:400;font-variant-numeric:tabular-nums}
+
+/* viewer */
+dialog{padding:0;border:0;background:transparent;color:var(--ink);max-width:none;max-height:none;
+  width:min(1120px,calc(100vw - 48px));height:min(920px,calc(100dvh - 48px));overflow:visible}
+dialog::backdrop{background:rgba(26,26,26,.72);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+dialog[open]{animation:pop 350ms var(--ease)}
+dialog[open]::backdrop{animation:fade 300ms var(--ease)}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.panel:focus{outline:none}
+.panel{display:flex;flex-direction:column;width:100%;height:100%;background:var(--paper);border-radius:var(--r-panel);box-shadow:var(--shadow);overflow:hidden}
+
+.bar{display:flex;align-items:center;gap:12px;padding:14px 14px 14px 24px;border-bottom:1px solid var(--line)}
+.title{flex:1;min-width:0}
+.title h2{margin:0;font-size:19px;font-weight:800;letter-spacing:-0.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.title h2 .num{color:var(--muted);font-weight:400;margin-right:6px;font-variant-numeric:tabular-nums}
+.title p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:var(--r-btn);
+  background:var(--paper);cursor:pointer;font-size:14px;font-weight:600;white-space:nowrap;transition:background 200ms var(--ease),border-color 200ms var(--ease)}
+.btn:hover{background:var(--ground);border-color:#d6d6d6}
+.btn svg{width:18px;height:18px;flex:none}
+.btn.icon{width:40px;padding:0;justify-content:center}
+
+.stage{position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:8px 56px;touch-action:pan-y;user-select:none}
+.stage img{width:100%;height:100%;object-fit:contain;transition:opacity 200ms var(--ease)}
+.stage img.swap{opacity:.25}
+.stage .missing{display:none;color:var(--muted);font-size:15px}
+.stage.broken img{display:none}.stage.broken .missing{display:block}
+.arrow{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:9999px;border:1px solid var(--line);
+  background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:background 200ms var(--ease),box-shadow 200ms var(--ease)}
+.arrow:hover{background:var(--paper);box-shadow:var(--shadow)}
+.arrow svg{width:22px;height:22px}
+.arrow.prev{left:16px}.arrow.next{right:16px}
+
+.sides{border-top:1px solid var(--line);padding:12px 16px 14px}
+.strip{position:relative;display:flex;gap:8px;justify-content:center;overflow-x:auto;scrollbar-width:thin;scrollbar-color:#cfcfcf transparent;list-style:none;margin:0;padding:2px}
+.strip button{display:flex;flex-direction:column;align-items:center;gap:6px;width:100px;flex:none;padding:6px 6px 8px;border:2px solid transparent;border-radius:10px;
+  background:none;cursor:pointer;transition:border-color 200ms var(--ease),background 200ms var(--ease)}
+.strip button:hover{background:var(--ground)}
+.strip button[aria-current="true"]{border-color:var(--ink)}
+.strip .t{width:100%;height:64px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.strip img{width:100%;height:100%;object-fit:contain}
+.strip span{font-size:12px;line-height:1.2;color:var(--muted);text-align:center;white-space:nowrap}
+.strip button[aria-current="true"] span{color:var(--ink);font-weight:600}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+@media (max-width:1199px){.grid{grid-template-columns:repeat(6,minmax(0,1fr))}}
+@media (max-width:959px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:639px){
+  .page{padding:28px 16px 56px}
+  .intro{margin-bottom:28px}
+  .group{margin-bottom:36px}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  dialog{width:100vw;height:100dvh}
+  .panel{border-radius:0}
+  .bar{padding:10px 10px 10px 16px;gap:6px}
+  .title h2{font-size:16px}
+  .btn .lbl{display:none}
+  .btn{width:40px;padding:0;justify-content:center}
+  .stage{padding:8px}
+  .arrow{width:40px;height:40px}.arrow.prev{left:8px}.arrow.next{right:8px}
+  .sides{padding:8px 8px 12px}
+  .strip{justify-content:flex-start}
+  .strip button{width:68px;padding:4px}
+  .strip .t{height:46px}
+  .strip span{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after,dialog[open],dialog[open]::backdrop{animation:none!important;transition:none!important}
+  .tile:hover{transform:none}
+}
+</style></head><body>
+<main class="page">
+  <header class="intro">
+    <h1>Microsoft Sample Designs</h1>
+    <p>9 designs. Click any shoe to see it from every side.</p>
+  </header>
+  <div id="groups"></div>
+</main>
+
+<dialog id="viewer" aria-labelledby="v-name">
+  <div class="panel" tabindex="-1">
+    <div class="bar">
+      <div class="title"><h2 id="v-name"></h2><p id="v-side" aria-live="polite"></p></div>
+      <button class="btn" id="v-prevd" type="button" aria-label="Previous design"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m18 15-6-6-6 6"/></svg><span class="lbl">Previous design</span></button>
+      <button class="btn" id="v-nextd" type="button" aria-label="Next design"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg><span class="lbl">Next design</span></button>
+      <button class="btn icon" id="v-close" type="button" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <div class="stage" id="v-stage">
+      <img id="v-img" alt="">
+      <p class="missing">This side isn't available yet.</p>
+      <button class="arrow prev" id="v-prev" type="button" aria-label="Previous side"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+      <button class="arrow next" id="v-next" type="button" aria-label="Next side"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+    </div>
+    <nav class="sides" aria-label="Sides"><ul class="strip" id="v-strip"></ul></nav>
+  </div>
+</dialog>
+
+<script>
+const DATA = {"groups": [{"name": "Fabric Classic", "slug": "fabric-classic", "designs": [{"n": 1, "slug": "fabric-classic-bolder-b", "name": "Fabric Classic Bolder B", "short": "Bolder B", "cover": "thumbs/round-13__fabric-classic-bolder-B-white__mockups__Left_Outside.jpg", "views": [{"label": "Front", "full": "round-13/fabric-classic-bolder-B-white/mockups/Front.jpg", "thumb": "thumbs/round-13__fabric-classic-bolder-B-white__mockups__Front.jpg", "cover": false}, {"label": "Left Outside", "full": "round-13/fabric-classic-bolder-B-white/mockups/Left_Outside.jpg", "thumb": "thumbs/round-13__fabric-classic-bolder-B-white__mockups__Left_Outside.jpg", "cover": true}, {"label": "Right Outside", "full": "round-13/fabric-classic-bolder-B-white/mockups/Right_Outside.jpg", "thumb": "thumbs/round-13__fabric-classic-bolder-B-white__mockups__Right_Outside.jpg", "cover": false}, {"label": "Left Inside", "full": "round-13/fabric-classic-bolder-B-white/mockups/Left_Inside.jpg", "thumb": "thumbs/round-13__fabric-classic-bolder-B-white__mockups__Left_Inside.jpg", "cover": false}, {"label": "Right Inside", "full": "round-13/fabric-classic-bolder-B-white/mockups/Right_Inside.jpg", "thumb": "thumbs/round-13__fabric-classic-bolder-B-white__mockups__Right_Inside.jpg", "cover": false}, {"label": "Side", "full": "round-13/fabric-classic-bolder-B-white/mockups/Side.jpg", "thumb": "thumbs/round-13__fabric-classic-bolder-B-white__mockups__Side.jpg", "cover": false}, {"label": "Top", "full": "round-13/fabric-classic-bolder-B-white/mockups/Top.jpg", "thumb": "thumbs/round-13__fabric-classic-bolder-B-white__mockups__Top.jpg", "cover": false}, {"label": "Back", "full": "round-13/fabric-classic-bolder-B-white/mockups/Back.jpg", "thumb": "thumbs/round-13__fabric-classic-bolder-B-white__mockups__Back.jpg", "cover": false}]}, {"n": 2, "slug": "fabric-classic-swoosh", "name": "Fabric Classic Swoosh", "short": "Swoosh", "cover": "thumbs/round-13__fabric-classic-swoosh-white__mockups__Left_Outside.jpg", "views": [{"label": "Front", "full": "round-13/fabric-classic-swoosh-white/mockups/Front.jpg", "thumb": "thumbs/round-13__fabric-classic-swoosh-white__mockups__Front.jpg", "cover": false}, {"label": "Left Outside", "full": "round-13/fabric-classic-swoosh-white/mockups/Left_Outside.jpg", "thumb": "thumbs/round-13__fabric-classic-swoosh-white__mockups__Left_Outside.jpg", "cover": true}, {"label": "Right Outside", "full": "round-13/fabric-classic-swoosh-white/mockups/Right_Outside.jpg", "thumb": "thumbs/round-13__fabric-classic-swoosh-white__mockups__Right_Outside.jpg", "cover": false}, {"label": "Left Inside", "full": "round-13/fabric-classic-swoosh-white/mockups/Left_Inside.jpg", "thumb": "thumbs/round-13__fabric-classic-swoosh-white__mockups__Left_Inside.jpg", "cover": false}, {"label": "Right Inside", "full": "round-13/fabric-classic-swoosh-white/mockups/Right_Inside.jpg", "thumb": "thumbs/round-13__fabric-classic-swoosh-white__mockups__Right_Inside.jpg", "cover": false}, {"label": "Side", "full": "round-13/fabric-classic-swoosh-white/mockups/Side.jpg", "thumb": "thumbs/round-13__fabric-classic-swoosh-white__mockups__Side.jpg", "cover": false}, {"label": "Top", "full": "round-13/fabric-classic-swoosh-white/mockups/Top.jpg", "thumb": "thumbs/round-13__fabric-classic-swoosh-white__mockups__Top.jpg", "cover": false}, {"label": "Back", "full": "round-13/fabric-classic-swoosh-white/mockups/Back.jpg", "thumb": "thumbs/round-13__fabric-classic-swoosh-white__mockups__Back.jpg", "cover": false}]}]}, {"name": "SQL Classic", "slug": "sql-classic", "designs": [{"n": 3, "slug": "sql-classic-minimal-p1", "name": "SQL Classic Minimal P1", "short": "Minimal P1", "cover": "thumbs/recipes__sql-classic-minimal-P1__mockups__Left_Outside.jpg", "views": [{"label": "Front", "full": "recipes/sql-classic-minimal-P1/mockups/Front.jpg", "thumb": "thumbs/recipes__sql-classic-minimal-P1__mockups__Front.jpg", "cover": false}, {"label": "Left Outside", "full": "recipes/sql-classic-minimal-P1/mockups/Left_Outside.jpg", "thumb": "thumbs/recipes__sql-classic-minimal-P1__mockups__Left_Outside.jpg", "cover": true}, {"label": "Right Outside", "full": "recipes/sql-classic-minimal-P1/mockups/Right_Outside.jpg", "thumb": "thumbs/recipes__sql-classic-minimal-P1__mockups__Right_Outside.jpg", "cover": false}, {"label": "Left Inside", "full": "recipes/sql-classic-minimal-P1/mockups/Left_Inside.jpg", "thumb": "thumbs/recipes__sql-classic-minimal-P1__mockups__Left_Inside.jpg", "cover": false}, {"label": "Right Inside", "full": "recipes/sql-classic-minimal-P1/mockups/Right_Inside.jpg", "thumb": "thumbs/recipes__sql-classic-minimal-P1__mockups__Right_Inside.jpg", "cover": false}, {"label": "Side", "full": "recipes/sql-classic-minimal-P1/mockups/Side.jpg", "thumb": "thumbs/recipes__sql-classic-minimal-P1__mockups__Side.jpg", "cover": false}, {"label": "Top", "full": "recipes/sql-classic-minimal-P1/mockups/Top.jpg", "thumb": "thumbs/recipes__sql-classic-minimal-P1__mockups__Top.jpg", "cover": false}, {"label": "Back", "full": "recipes/sql-classic-minimal-P1/mockups/Back.jpg", "thumb": "thumbs/recipes__sql-classic-minimal-P1__mockups__Back.jpg", "cover": false}]}, {"n": 4, "slug": "sql-classic-bolder-a", "name": "SQL Classic Bolder A", "short": "Bolder A", "cover": "thumbs/round-13__sql-classic-bolder-A-white__mockups__Left_Outside.jpg", "views": [{"label": "Front", "full": "round-13/sql-classic-bolder-A-white/mockups/Front.jpg", "thumb": "thumbs/round-13__sql-classic-bolder-A-white__mockups__Front.jpg", "cover": false}, {"label": "Left Outside", "full": "round-13/sql-classic-bolder-A-white/mockups/Left_Outside.jpg", "thumb": "thumbs/round-13__sql-classic-bolder-A-white__mockups__Left_Outside.jpg", "cover": true}, {"label": "Right Outside", "full": "round-13/sql-classic-bolder-A-white/mockups/Right_Outside.jpg", "thumb": "thumbs/round-13__sql-classic-bolder-A-white__mockups__Right_Outside.jpg", "cover": false}, {"label": "Left Inside", "full": "round-13/sql-classic-bolder-A-white/mockups/Left_Inside.jpg", "thumb": "thumbs/round-13__sql-classic-bolder-A-white__mockups__Left_Inside.jpg", "cover": false}, {"label": "Right Inside", "full": "round-13/sql-classic-bolder-A-white/mockups/Right_Inside.jpg", "thumb": "thumbs/round-13__sql-classic-bolder-A-white__mockups__Right_Inside.jpg", "cover": false}, {"label": "Side", "full": "round-13/sql-classic-bolder-A-white/mockups/Side.jpg", "thumb": "thumbs/round-13__sql-classic-bolder-A-white__mockups__Side.jpg", "cover": false}, {"label": "Top", "full": "round-13/sql-classic-bolder-A-white/mockups/Top.jpg", "thumb": "thumbs/round-13__sql-classic-bolder-A-white__mockups__Top.jpg", "cover": false}, {"label": "Back", "full": "round-13/sql-classic-bolder-A-white/mockups/Back.jpg", "thumb": "thumbs/round-13__sql-classic-bolder-A-white__mockups__Back.jpg", "cover": false}]}, {"n": 5, "slug": "sql-classic-bolder-b", "name": "SQL Classic Bolder B", "short": "Bolder B", "cover": "thumbs/round-13__sql-classic-bolder-B-white__mockups__Left_Outside.jpg", "views": [{"label": "Front", "full": "round-13/sql-classic-bolder-B-white/mockups/Front.jpg", "thumb": "thumbs/round-13__sql-classic-bolder-B-white__mockups__Front.jpg", "cover": false}, {"label": "Left Outside", "full": "round-13/sql-classic-bolder-B-white/mockups/Left_Outside.jpg", "thumb": "thumbs/round-13__sql-classic-bolder-B-white__mockups__Left_Outside.jpg", "cover": true}, {"label": "Right Outside", "full": "round-13/sql-classic-bolder-B-white/mockups/Right_Outside.jpg", "thumb": "thumbs/round-13__sql-classic-bolder-B-white__mockups__Right_Outside.jpg", "cover": false}, {"label": "Left Inside", "full": "round-13/sql-classic-bolder-B-white/mockups/Left_Inside.jpg", "thumb": "thumbs/round-13__sql-classic-bolder-B-white__mockups__Left_Inside.jpg", "cover": false}, {"label": "Right Inside", "full": "round-13/sql-classic-bolder-B-white/mockups/Right_Inside.jpg", "thumb": "thumbs/round-13__sql-classic-bolder-B-white__mockups__Right_Inside.jpg", "cover": false}, {"label": "Side", "full": "round-13/sql-classic-bolder-B-white/mockups/Side.jpg", "thumb": "thumbs/round-13__sql-classic-bolder-B-white__mockups__Side.jpg", "cover": false}, {"label": "Top", "full": "round-13/sql-classic-bolder-B-white/mockups/Top.jpg", "thumb": "thumbs/round-13__sql-classic-bolder-B-white__mockups__Top.jpg", "cover": false}, {"label": "Back", "full": "round-13/sql-classic-bolder-B-white/mockups/Back.jpg", "thumb": "thumbs/round-13__sql-classic-bolder-B-white__mockups__Back.jpg", "cover": false}]}, {"n": 6, "slug": "sql-classic-bolder-pixel-grid", "name": "SQL Classic Bolder, pixel grid", "short": "Bolder, pixel grid", "cover": "thumbs/6-sql-classic-bolder__mockups__Left_Outside.jpg", "views": [{"label": "Front", "full": "6-sql-classic-bolder/mockups/Front.jpg", "thumb": "thumbs/6-sql-classic-bolder__mockups__Front.jpg", "cover": false}, {"label": "Left Outside", "full": "6-sql-classic-bolder/mockups/Left_Outside.jpg", "thumb": "thumbs/6-sql-classic-bolder__mockups__Left_Outside.jpg", "cover": true}, {"label": "Right Outside", "full": "6-sql-classic-bolder/mockups/Right_Outside.jpg", "thumb": "thumbs/6-sql-classic-bolder__mockups__Right_Outside.jpg", "cover": false}, {"label": "Left Inside", "full": "6-sql-classic-bolder/mockups/Left_Inside.jpg", "thumb": "thumbs/6-sql-classic-bolder__mockups__Left_Inside.jpg", "cover": false}, {"label": "Right Inside", "full": "6-sql-classic-bolder/mockups/Right_Inside.jpg", "thumb": "thumbs/6-sql-classic-bolder__mockups__Right_Inside.jpg", "cover": false}, {"label": "Side", "full": "6-sql-classic-bolder/mockups/Side.jpg", "thumb": "thumbs/6-sql-classic-bolder__mockups__Side.jpg", "cover": false}, {"label": "Top", "full": "6-sql-classic-bolder/mockups/Top.jpg", "thumb": "thumbs/6-sql-classic-bolder__mockups__Top.jpg", "cover": false}, {"label": "Back", "full": "6-sql-classic-bolder/mockups/Back.jpg", "thumb": "thumbs/6-sql-classic-bolder__mockups__Back.jpg", "cover": false}]}, {"n": 7, "slug": "sql-classic-swoosh", "name": "SQL Classic Swoosh", "short": "Swoosh", "cover": "thumbs/round-13__sql-classic-swoosh-white__mockups__Left_Outside.jpg", "views": [{"label": "Front", "full": "round-13/sql-classic-swoosh-white/mockups/Front.jpg", "thumb": "thumbs/round-13__sql-classic-swoosh-white__mockups__Front.jpg", "cover": false}, {"label": "Left Outside", "full": "round-13/sql-classic-swoosh-white/mockups/Left_Outside.jpg", "thumb": "thumbs/round-13__sql-classic-swoosh-white__mockups__Left_Outside.jpg", "cover": true}, {"label": "Right Outside", "full": "round-13/sql-classic-swoosh-white/mockups/Right_Outside.jpg", "thumb": "thumbs/round-13__sql-classic-swoosh-white__mockups__Right_Outside.jpg", "cover": false}, {"label": "Left Inside", "full": "round-13/sql-classic-swoosh-white/mockups/Left_Inside.jpg", "thumb": "thumbs/round-13__sql-classic-swoosh-white__mockups__Left_Inside.jpg", "cover": false}, {"label": "Right Inside", "full": "round-13/sql-classic-swoosh-white/mockups/Right_Inside.jpg", "thumb": "thumbs/round-13__sql-classic-swoosh-white__mockups__Right_Inside.jpg", "cover": false}, {"label": "Side", "full": "round-13/sql-classic-swoosh-white/mockups/Side.jpg", "thumb": "thumbs/round-13__sql-classic-swoosh-white__mockups__Side.jpg", "cover": false}, {"label": "Top", "full": "round-13/sql-classic-swoosh-white/mockups/Top.jpg", "thumb": "thumbs/round-13__sql-classic-swoosh-white__mockups__Top.jpg", "cover": false}, {"label": "Back", "full": "round-13/sql-classic-swoosh-white/mockups/Back.jpg", "thumb": "thumbs/round-13__sql-classic-swoosh-white__mockups__Back.jpg", "cover": false}]}]}, {"name": "SQL Core", "slug": "sql-core", "designs": [{"n": 8, "slug": "sql-core-minimal-a", "name": "SQL Core Minimal A", "short": "Minimal A", "cover": "thumbs/round-14__sql-core-minimal-A-white__mockups__Left_Outside.jpg", "views": [{"label": "Left Outside", "full": "round-14/sql-core-minimal-A-white/mockups/Left_Outside.jpg", "thumb": "thumbs/round-14__sql-core-minimal-A-white__mockups__Left_Outside.jpg", "cover": true}, {"label": "Right Outside", "full": "round-14/sql-core-minimal-A-white/mockups/Right_Outside.jpg", "thumb": "thumbs/round-14__sql-core-minimal-A-white__mockups__Right_Outside.jpg", "cover": false}, {"label": "Left Inside", "full": "round-14/sql-core-minimal-A-white/mockups/Left_Inside.jpg", "thumb": "thumbs/round-14__sql-core-minimal-A-white__mockups__Left_Inside.jpg", "cover": false}, {"label": "Right Inside", "full": "round-14/sql-core-minimal-A-white/mockups/Right_Inside.jpg", "thumb": "thumbs/round-14__sql-core-minimal-A-white__mockups__Right_Inside.jpg", "cover": false}, {"label": "Side", "full": "round-14/sql-core-minimal-A-white/mockups/Side.jpg", "thumb": "thumbs/round-14__sql-core-minimal-A-white__mockups__Side.jpg", "cover": false}, {"label": "Top", "full": "round-14/sql-core-minimal-A-white/mockups/Top.jpg", "thumb": "thumbs/round-14__sql-core-minimal-A-white__mockups__Top.jpg", "cover": false}, {"label": "Back", "full": "round-14/sql-core-minimal-A-white/mockups/Back.jpg", "thumb": "thumbs/round-14__sql-core-minimal-A-white__mockups__Back.jpg", "cover": false}]}, {"n": 9, "slug": "sql-core-bolder-b", "name": "SQL Core Bolder B", "short": "Bolder B", "cover": "thumbs/round-14__sql-core-bolder-B-white__mockups__Left_Outside.jpg", "views": [{"label": "Left Outside", "full": "round-14/sql-core-bolder-B-white/mockups/Left_Outside.jpg", "thumb": "thumbs/round-14__sql-core-bolder-B-white__mockups__Left_Outside.jpg", "cover": true}, {"label": "Right Outside", "full": "round-14/sql-core-bolder-B-white/mockups/Right_Outside.jpg", "thumb": "thumbs/round-14__sql-core-bolder-B-white__mockups__Right_Outside.jpg", "cover": false}, {"label": "Left Inside", "full": "round-14/sql-core-bolder-B-white/mockups/Left_Inside.jpg", "thumb": "thumbs/round-14__sql-core-bolder-B-white__mockups__Left_Inside.jpg", "cover": false}, {"label": "Right Inside", "full": "round-14/sql-core-bolder-B-white/mockups/Right_Inside.jpg", "thumb": "thumbs/round-14__sql-core-bolder-B-white__mockups__Right_Inside.jpg", "cover": false}, {"label": "Side", "full": "round-14/sql-core-bolder-B-white/mockups/Side.jpg", "thumb": "thumbs/round-14__sql-core-bolder-B-white__mockups__Side.jpg", "cover": false}, {"label": "Top", "full": "round-14/sql-core-bolder-B-white/mockups/Top.jpg", "thumb": "thumbs/round-14__sql-core-bolder-B-white__mockups__Top.jpg", "cover": false}, {"label": "Back", "full": "round-14/sql-core-bolder-B-white/mockups/Back.jpg", "thumb": "thumbs/round-14__sql-core-bolder-B-white__mockups__Back.jpg", "cover": false}]}]}]};
+const flat = [];
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+// grid
+$('groups').innerHTML = DATA.groups.map(g => `
+  <section class="group" aria-labelledby="g-${esc(g.slug)}">
+    <div class="group-h"><h2 id="g-${esc(g.slug)}">${esc(g.name)}</h2><span>${g.designs.length} ${g.designs.length === 1 ? 'design' : 'designs'}</span></div>
+    <ul class="grid">${g.designs.map(d => { const i = flat.push(d) - 1; d.group = g.name; return `
+      <li><a class="tile" href="#${esc(d.slug)}" data-i="${i}">
+        <div class="pic"><img src="${esc(d.cover)}" alt="${esc(d.name)}" loading="lazy"></div>
+        <div class="cap"><span class="num">${d.n}</span><span>${esc(d.short)}</span></div>
+      </a></li>`; }).join('')}</ul>
+  </section>`).join('');
+
+// viewer
+const dlg = $('viewer'), img = $('v-img'), stage = $('v-stage');
+let di = 0, vi = 0, token = 0;
+const preload = d => d.views.forEach(v => { const p = new Image(); p.src = v.full; });
+
+function show() {
+  const d = flat[di], v = d.views[vi], t = ++token;
+  $('v-name').innerHTML = `<span class="num">${d.n}</span>${esc(d.name)}`;
+  $('v-side').textContent = `${v.label} · side ${vi + 1} of ${d.views.length}`;
+  $('v-strip').innerHTML = d.views.map((w, j) => `<li><button type="button" data-v="${j}" aria-current="${j === vi}" aria-label="${esc(w.label)}">
+    <div class="t"><img src="${esc(w.thumb)}" alt=""></div><span>${esc(w.label)}</span></button></li>`).join('');
+  const strip = $('v-strip'), cur = strip.querySelector('[aria-current="true"]').parentNode;   // keep the active side in view on phones, never scroll the page
+  strip.scrollLeft = cur.offsetLeft - (strip.clientWidth - cur.offsetWidth) / 2;
+  img.alt = `${d.name}, ${v.label}`;
+  stage.classList.remove('broken');
+  if (img.getAttribute('src') === v.full) return;
+  img.classList.add('swap');
+  const done = ok => { if (t !== token) return; if (ok) img.src = v.full; else stage.classList.add('broken'); img.classList.remove('swap'); };
+  const next = new Image();   // onload, not decode(): decode() can hang forever in some browsers
+  next.onload = () => done(true); next.onerror = () => done(false); next.src = v.full;
+}
+function open(i, v) {
+  di = i; vi = v ?? Math.max(0, flat[i].views.findIndex(w => w.cover));
+  preload(flat[di]); show();
+  if (!dlg.open) { document.documentElement.classList.add('locked'); dlg.showModal(); dlg.querySelector('.panel').focus(); }
+  history.replaceState(null, '', '#' + flat[di].slug);
+}
+const side = s => { const n = flat[di].views.length; vi = (vi + s + n) % n; show(); };
+const design = s => { const i = (di + s + flat.length) % flat.length; const label = flat[di].views[vi].label;
+  const same = flat[i].views.findIndex(w => w.label === label); open(i, same >= 0 ? same : undefined); };
+
+document.addEventListener('click', e => {
+  const a = e.target.closest('a.tile');
+  if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+  e.preventDefault(); open(+a.dataset.i);
+});
+dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });   // click outside the panel
+$('v-close').onclick = () => dlg.close();
+$('v-prev').onclick = () => side(-1); $('v-next').onclick = () => side(1);
+$('v-prevd').onclick = () => design(-1); $('v-nextd').onclick = () => design(1);
+$('v-strip').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { vi = +b.dataset.v; show(); } });
+dlg.addEventListener('keydown', e => {
+  const k = {ArrowRight: () => side(1), ArrowLeft: () => side(-1), ArrowDown: () => design(1), ArrowUp: () => design(-1)}[e.key];
+  if (k) { e.preventDefault(); k(); }
+});
+dlg.addEventListener('close', () => {
+  document.documentElement.classList.remove('locked');
+  history.replaceState(null, '', location.pathname + location.search);
+  const tile = document.querySelector(`a.tile[data-i="${di}"]`);
+  if (tile) tile.focus({preventScroll: true});
+});
+let sx = null, sy = 0;   // swipe on phones
+stage.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') { sx = e.clientX; sy = e.clientY; } });
+stage.addEventListener('pointerup', e => {
+  if (sx === null) return; const dx = e.clientX - sx, dy = e.clientY - sy; sx = null;
+  if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) side(dx < 0 ? 1 : -1);
+});
+const start = flat.findIndex(d => '#' + d.slug === location.hash);   // a shared link opens its shoe
+if (start >= 0) open(start);
+</script>
+</body></html>
