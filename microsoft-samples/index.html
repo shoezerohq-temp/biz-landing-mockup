@@ -55,7 +55,7 @@ h1{margin:0;font-weight:800;font-size:clamp(28px,3.2vw,44px);line-height:1.1;let
 .tile.empty .pic{display:none}
 .tile.empty strong{font-size:14px}
 .tile.empty span{font-size:12px;color:var(--muted)}
-.edit{display:none}
+body:not(.local) .edit{display:none!important}   /* edit boxes exist only on the local server; the public copy never shows them */
 body.local .edit{display:flex}
 .slot-form{flex-direction:column;gap:6px;width:100%;margin-top:6px}
 .slot-form input,.linkform input{font:inherit;font-size:13px;height:34px;padding:0 10px;border:1px solid var(--line);border-radius:var(--r-btn);background:var(--paper);min-width:0;width:100%}
