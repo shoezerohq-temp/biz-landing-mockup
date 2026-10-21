@@ -4,7 +4,10 @@
      Arrows/keys/swipe = sides of this shoe. No previous / next design buttons (Benedict, Oct 21). Empty slots link to an empty shoe.
      Edit mode (Benedict, Oct 21: "I should be able to edit the links of 3d"): when the server on his Mac answers (scripts/serve.py,
      /api/ping, also reached from the PUBLIC page at http://localhost:8791), each design gets "Change 3D link", each empty slot a paste
-     box, and the header a Publish button. Oct 22 01:20 (Benedict): the public page never shows them, it is what Conrad gets; edit on localhost. -->
+     box, and the header a Publish button. Oct 22 01:50 (Benedict: "make it easier to replace links ... ONLY FOR ME"): on the public page the same
+     controls appear only when a GitHub token is stored in this browser (the "Edit links" link under the title); a save then starts the
+     repo's gallery-link workflow, which fetches the design's pictures, rebuilds and republishes, and the page reloads itself when the
+     new version is live. No server anywhere. Conrad, with no token, sees a plain gallery. -->
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Microsoft Final Designs</title>
@@ -67,6 +70,8 @@ body.local .edit{display:flex}
 .linkform[hidden]{display:none!important}
 .linkform .url{flex:3}.linkform .nm{flex:1}
 .pubbar{gap:10px;align-items:center;margin:12px 0 0}
+.keyline{margin:8px 0 0;font-size:12px}.keyline a{color:var(--muted)}
+body.local .pubbar.gh{display:none}
 .btn.go{background:var(--ink);border-color:var(--ink);color:var(--paper);text-decoration:none}
 .btn.go:hover{background:#333;border-color:#333}
 
@@ -149,6 +154,7 @@ dialog[open]::backdrop{animation:fade 300ms var(--ease)}
     <h1>Microsoft Final Designs</h1>
     <p>18 designs. Click any shoe to see it from every side and open it in the 3D customizer.</p>
     <div class="edit pubbar"><button class="btn go" id="publish" type="button">Publish to the public link</button><span class="msg" id="pubmsg"></span></div>
+    <p class="keyline"><a href="#" id="keylink">Edit links</a></p>
   </header>
   <div id="groups"></div>
 </main>
@@ -266,17 +272,28 @@ stage.addEventListener('pointerup', e => {
 });
 // edit mode: the server on Benedict's Mac. On localhost it is this same origin; on the public page it is reached at localhost:8791.
 const LOCAL = ['localhost', '127.0.0.1'].includes(location.hostname), API = LOCAL ? '' : 'http://localhost:8791';
+const GH = {owner: 'shoezerohq-temp', repo: 'biz-landing-mockup', workflow: 'gallery-link.yml', branch: 'main'};
+const ghToken = () => localStorage.getItem('gallery_gh_token') || '';
 let pageNow = '';   // this page's HTML as served, to notice when GitHub has published the new version
 async function post(path, body) {
+  if (!LOCAL && ghToken()) {   // public page with a token: ask GitHub to run the gallery-link workflow (it fetches, rebuilds, republishes)
+    if (path !== '/api/link') return {ok: false, error: 'not needed here: a saved link publishes itself'};
+    const r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/actions/workflows/${GH.workflow}/dispatches`,
+      {method: 'POST', headers: {'Authorization': 'Bearer ' + ghToken(), 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+       body: JSON.stringify({ref: GH.branch, inputs: {key: body.key, url: body.url || '', name: body.name || ''}})}).catch(e => ({status: 0, statusText: e.message}));
+    if (r.status === 204) return {ok: true, published: true, gh: true, message: 'GitHub is rebuilding the gallery'};
+    const why = r.status === 401 || r.status === 403 ? 'the token was refused (click Edit links and paste a fresh one)' : r.status === 0 ? r.statusText : 'GitHub answered ' + r.status;
+    return {ok: false, error: why};
+  }
   try { const r = await fetch(API + path, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)}); return await r.json(); }
   catch (e) { return {ok: false, error: 'no answer from the server on your Mac (is the microsoft-gallery server running?)'}; }
 }
-async function waitForPublish(msg) {
-  for (let i = 0; i < 36; i++) {   // GitHub Pages takes about a minute
+async function waitForPublish(msg, rounds = 36) {
+  for (let i = 0; i < rounds; i++) {   // GitHub Pages takes about a minute; the workflow path about three
     await new Promise(r => setTimeout(r, 5000));
     const t = await fetch(location.pathname + '?n=' + Date.now(), {cache: 'no-store'}).then(r => r.text()).catch(() => '');
     if (t && t !== pageNow) return true;
-    msg.textContent = `Published. Waiting for the page to update (${(i + 1) * 5}s)...`;
+    msg.textContent = `${ghToken() && !LOCAL ? 'GitHub is rebuilding' : 'Published'}. Waiting for the page to update (${(i + 1) * 5}s)...`;
   }
   return false;
 }
@@ -285,11 +302,15 @@ async function saveLink(key, url, name, msg) {
   const r = await post('/api/link', {key, url, name, publish: !LOCAL});
   if (!r.ok) { msg.textContent = r.error || 'Could not save'; return; }
   sessionStorage.setItem('reopen', key);
-  if (!LOCAL) { msg.className = 'msg ok'; msg.textContent = r.published ? 'Saved and published. Waiting for the page to update...' : ('Saved, but publishing failed: ' + (r.message || '')); if (r.published) await waitForPublish(msg); else return; }
+  if (!LOCAL) { msg.className = 'msg ok'; msg.textContent = r.published ? 'Saved and published. Waiting for the page to update...' : ('Saved, but publishing failed: ' + (r.message || '')); if (r.published) await waitForPublish(msg, r.gh ? 72 : 36); else return; }
   location.hash = ''; location.reload();
 }
 // Benedict, Oct 22 01:20: the online page is what Conrad gets, so it never shows edit controls; editing lives on http://localhost:8791 only.
 if (LOCAL) fetch(API + '/api/ping', {cache: 'no-store'}).then(r => r.ok && r.json()).then(j => { if (j && j.ok) document.body.classList.add('local'); }).catch(() => {});
+else if (ghToken()) { document.body.classList.add('local'); document.querySelector('.pubbar').classList.add('gh'); }
+$('keylink').onclick = e => { e.preventDefault();
+  const t = prompt(ghToken() ? 'A GitHub token is stored in this browser. Paste a new one, or clear the box and press OK to stop editing here.' : 'Paste your GitHub token (fine-grained, this repo only, Actions: read and write). It stays in this browser.', ghToken());
+  if (t === null) return; if (t.trim()) localStorage.setItem('gallery_gh_token', t.trim()); else localStorage.removeItem('gallery_gh_token'); location.reload(); };
 if (!LOCAL) fetch(location.pathname + '?n=' + Date.now(), {cache: 'no-store'}).then(r => r.text()).then(t => { pageNow = t; }).catch(() => {});
 $('v-edit').onclick = () => { const f = $('v-form'), d = flat[di]; f.hidden = !f.hidden; $('v-url').value = d.url || ''; $('v-nm').value = d.short || ''; $('v-msg').textContent = ''; if (!f.hidden) $('v-url').focus(); };
 $('v-form').onsubmit = e => { e.preventDefault(); saveLink(flat[di].key, $('v-url').value, $('v-nm').value, $('v-msg')); };

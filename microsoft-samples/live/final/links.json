@@ -1,0 +1,92 @@
+{
+ "sql-classic-minimal-1": {
+  "url": "https://shoezero.com/pages/share-design/?model=classic-zero&configId=423580",
+  "name": "SQL Pill",
+  "model": "classic-zero"
+ },
+ "sql-classic-minimal-2": {
+  "url": "https://shoezero.com/pages/share-design/?model=classic-zero&configId=423614",
+  "name": "SQL Pill + SELECT *",
+  "model": "classic-zero"
+ },
+ "sql-classic-creative-1": {
+  "url": "https://shoezero.com/pages/share-design/?model=classic-zero&configId=423615",
+  "name": "Wave",
+  "model": "classic-zero"
+ },
+ "sql-classic-creative-2": {
+  "url": "https://shoezero.com/pages/share-design/?model=classic-zero&configId=423586",
+  "name": "Squares",
+  "model": "classic-zero"
+ },
+ "sql-classic-creative-3": {
+  "url": "https://shoezero.com/pages/share-design/?model=classic-zero&configId=423588",
+  "name": "Little Squares",
+  "model": "classic-zero"
+ },
+ "sql-core-minimal-1": {
+  "url": "https://shoezero.com/pages/share-design/?model=court-zero-lowtop&configId=423536",
+  "name": "Blue Heel, SQL Pill",
+  "model": "court-zero-lowtop"
+ },
+ "sql-core-minimal-2": {
+  "url": "https://shoezero.com/pages/share-design/?model=court-zero-lowtop&configId=423529",
+  "name": "Blue Panels, SQL Pill",
+  "model": "court-zero-lowtop"
+ },
+ "fabric-classic-minimal-1": {
+  "url": "https://shoezero.com/pages/share-design/?model=classic-zero&configId=423583",
+  "name": "F on the Side",
+  "model": "classic-zero"
+ },
+ "fabric-classic-minimal-2": {
+  "url": "https://shoezero.com/pages/share-design/?model=classic-zero&configId=423585",
+  "name": "F, Dark Heel Wedge",
+  "model": "classic-zero"
+ },
+ "fabric-classic-creative-1": {
+  "url": "https://shoezero.com/pages/share-design/?model=classic-zero&configId=423599",
+  "name": "Wave",
+  "model": "classic-zero"
+ },
+ "fabric-classic-creative-2": {
+  "url": "https://shoezero.com/pages/share-design/?model=classic-zero&configId=423591",
+  "name": "See Stripe",
+  "model": "classic-zero"
+ },
+ "fabric-classic-creative-3": {
+  "url": "https://shoezero.com/pages/share-design/?model=classic-zero&configId=423592",
+  "name": "Stripe V2",
+  "model": "classic-zero"
+ },
+ "fabric-core-minimal-1": {
+  "url": "https://shoezero.com/pages/share-design/?model=court-zero-lowtop&configId=423534",
+  "name": "Teal Heel, F Logo",
+  "model": "court-zero-lowtop"
+ },
+ "fabric-core-minimal-2": {
+  "url": "https://shoezero.com/pages/share-design/?model=court-zero-lowtop&configId=423528",
+  "name": "Teal Panels, F Logo",
+  "model": "court-zero-lowtop"
+ },
+ "fabric-core-creative-1": {
+  "url": "https://shoezero.com/pages/share-design/?model=court-zero-lowtop&configId=423617",
+  "name": "Tile Pattern",
+  "model": "court-zero-lowtop"
+ },
+ "sql-core-creative-1": {
+  "url": "https://shoezero.com/pages/share-design/?model=court-zero-lowtop&configId=423616",
+  "name": "Tile Pattern",
+  "model": "court-zero-lowtop"
+ },
+ "fabric-core-creative-2": {
+  "url": "https://shoezero.com/pages/share-design/?model=court-zero-lowtop&configId=423612",
+  "name": "Tile Pattern 2",
+  "model": "court-zero-lowtop"
+ },
+ "sql-core-creative-2": {
+  "url": "https://shoezero.com/pages/share-design/?model=court-zero-lowtop&configId=423613",
+  "name": "Tile Pattern 2",
+  "model": "court-zero-lowtop"
+ }
+}
