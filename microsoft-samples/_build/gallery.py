@@ -69,6 +69,8 @@ for brand, models in CURRENT:
         M = {"name": f"{brand} {model}", "slug": slug(f"{brand} {model}"), "rows": []}
         for style, items in rows:
             R = {"name": style, "designs": []}
+            base = f"{brand.lower()}-{model.lower()}-{style.lower()}-"; listed = {k for _, k in items}
+            items = list(items) + [(k[len(base):], k) for k in sorted(LINKS) if k.startswith(base) and k not in listed]   # extra slots added from the page (Oct 22: "add another one")
             for i, (label, key) in enumerate(items, 1):
                 entry = LINKS.get(key) or {}; label = entry.get("name") or label; url = entry.get("url", "")
                 folder = f"live/final/{key}"
