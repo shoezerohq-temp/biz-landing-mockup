@@ -69,7 +69,12 @@ def fetch(cid):
 def build(slot, links):
     d = f"{OUT}/{slot}"; tmp = d + ".new"; shutil.rmtree(tmp, ignore_errors=True); os.makedirs(tmp)
     entry = links.get(slot) or {}
-    if entry.get("url"):
+    if entry.get("og"):   # Benedict, Oct 22: "use the og image": the design's original 2D mockup renders (the 8-view mockups/ folder), toe-right views
+        from PIL import Image
+        for src, side in (("Right_Outside", "01-Outside"), ("Right_Inside", "02-Inside"), ("Top", "03-Top"), ("Back", "04-Back")):
+            f = f"{ROOT}/{entry['og']}/{src}.jpg"
+            if os.path.exists(f): Image.open(f).convert("RGB").save(f"{tmp}/{side}.png")
+    elif entry.get("url"):
         j = fetch(config_id(entry["url"]))
         for k, side in SNAP_SIDES.items():
             u = j.get("snapshots", {}).get(k)
@@ -81,9 +86,13 @@ def build(slot, links):
         if slot in FLIP: print("   flipped", slot, mirror_keep_glyphs(f"{ROOT}/{src}", f"{tmp}/01-Outside.png", FLIP[slot]))
         elif os.path.exists(f"{ROOT}/{src}"): shutil.copy(f"{ROOT}/{src}", f"{tmp}/01-Outside.png")   # concept pictures are not in the public repo
         if os.path.exists(f"{ROOT}/{src[:-4]}-back.png"): shutil.copy(f"{ROOT}/{src[:-4]}-back.png", f"{tmp}/04-Back.png")
-    shutil.rmtree(d, ignore_errors=True)
-    if os.listdir(tmp): os.rename(tmp, d)
-    else: os.rmdir(tmp)
+    # iCloud quirk (Oct 22): renaming a folder over a deleted one brought the old one back as "<slot> 2", so files are moved one by one
+    if os.path.isdir(d):
+        for f in os.listdir(d): os.remove(os.path.join(d, f))
+    else: os.makedirs(d)
+    for f in os.listdir(tmp): shutil.move(os.path.join(tmp, f), os.path.join(d, f))
+    shutil.rmtree(tmp, ignore_errors=True)
+    if not os.listdir(d): os.rmdir(d)
     return sorted(os.listdir(d)) if os.path.exists(d) else []
 
 if __name__ == "__main__":

@@ -93,5 +93,23 @@
   "url": "https://shoezero.com/pages/share-design/?model=court-zero-lowtop&configId=423630",
   "name": "Tile Pattern 3",
   "model": "court-zero-lowtop"
+ },
+ "fabric-classic-minimal-3": {
+  "url": "",
+  "name": "Minimal A",
+  "model": "classic-zero",
+  "og": "archive/rounds/round-13/fabric-classic-minimal-A-white/mockups"
+ },
+ "fabric-classic-creative-4": {
+  "url": "https://shoezero.com/pages/share-design/?model=classic-zero&configId=423629",
+  "name": "Bolder B",
+  "model": "classic-zero",
+  "og": "live/fabric-classic-bolder-B-white/mockups"
+ },
+ "fabric-classic-creative-5": {
+  "url": "",
+  "name": "Swoosh",
+  "model": "classic-zero",
+  "og": "live/fabric-classic-swoosh-white/mockups"
  }
 }
