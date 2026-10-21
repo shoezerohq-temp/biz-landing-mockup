@@ -83,8 +83,8 @@ for brand, models in CURRENT:
                 pick = lambda f: f[:-4] + "-hires.png" if os.path.exists(f"{HERE}/{folder}/{f[:-4]}-hires.png") else f   # the 3600 px viewer render when we have one (scripts/hires_capture.js)
                 views = [{"label": f[3:-4], "full": big(f"{folder}/{pick(f)}"), "thumb": thumb(f"{folder}/{pick(f)}"), "cover": f.startswith("01-")} for f in files]
                 R["designs"].append({"n": n, "key": key, "slug": slug(name), "name": name, "short": label, "cover": views[0]["thumb"], "views": views,
-                                     "url": url, "link": url or BLANK[model],
-                                     "linkLabel": "Open in 3D customizer" if url else "Start it in the 3D customizer"})
+                                     "url": url, "link": url,   # no 3D link = a 2D-only design: the page says so and shows no 3D button (Pam, Oct 22: a 3D link opened a blank product shoe)
+                                     "linkLabel": "Open in 3D customizer" if url else ""})
             M["rows"].append(R)
         B["models"].append(M)
     data["brands"].append(B)

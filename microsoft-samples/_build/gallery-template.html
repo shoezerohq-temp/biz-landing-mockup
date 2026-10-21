@@ -119,6 +119,8 @@ dialog[open]::backdrop{animation:fade 300ms var(--ease)}
 .strip img{width:100%;height:100%;object-fit:contain}
 .strip span{font-size:12px;line-height:1.2;color:var(--muted);text-align:center;white-space:nowrap}
 .strip button[aria-current="true"] span{color:var(--ink);font-weight:600}
+.only2d{font-size:13px;color:var(--muted);white-space:nowrap;align-self:center}
+.only2d-tag{margin-left:auto;font-size:11px;color:var(--muted);white-space:nowrap}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
 @media (max-width:1199px){.grid{grid-template-columns:repeat(6,minmax(0,1fr))}}
@@ -165,6 +167,7 @@ dialog[open]::backdrop{animation:fade 300ms var(--ease)}
       <div class="title"><h2 id="v-name"></h2><p id="v-side" aria-live="polite"></p></div>
       <button class="btn edit" id="v-edit" type="button">Change 3D link</button>
       <a class="btn go" id="v-link" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg><span class="lbl" id="v-link-lbl">Open in 3D customizer</span></a>
+      <span class="only2d" id="v-2d" style="display:none">2D pictures only, no 3D view for this design</span>
       <button class="btn icon" id="v-close" type="button" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
     </div>
     <form class="edit linkform" id="v-form" hidden>
@@ -203,7 +206,7 @@ const tile = d => d.empty
   : (() => { const i = flat.push(d) - 1; return `
       <li><a class="tile" href="#${esc(d.slug)}" data-i="${i}">
         <div class="pic"><img src="${esc(d.cover)}" alt="${esc(d.name)}"></div>
-        <div class="cap"><span class="num">${d.n}</span><span>${esc(d.short)}</span></div>
+        <div class="cap"><span class="num">${d.n}</span><span>${esc(d.short)}</span>${d.url ? '' : '<span class="only2d-tag">2D only</span>'}</div>
       </a></li>`; })();
 $('groups').innerHTML = DATA.brands.map(b => `
   <section class="brand" aria-labelledby="b-${esc(b.slug)}"><h2 id="b-${esc(b.slug)}">${esc(b.name)}</h2>
@@ -223,7 +226,7 @@ function show() {
   const d = flat[di], v = d.views[vi], t = ++token;
   $('v-name').innerHTML = `<span class="num">${d.n}</span>${esc(d.name)}`;
   $('v-side').textContent = `${v.label} · side ${vi + 1} of ${d.views.length}`;
-  $('v-link').href = d.link; $('v-link-lbl').textContent = d.linkLabel;
+  $('v-link').href = d.link || '#'; $('v-link-lbl').textContent = d.linkLabel; $('v-link').style.display = d.url ? '' : 'none'; $('v-2d').style.display = d.url ? 'none' : '';
   $('v-edit').textContent = d.url ? 'Change 3D link' : 'Add 3D link';
   $('v-strip').innerHTML = d.views.map((w, j) => `<li><button type="button" data-v="${j}" aria-current="${j === vi}" aria-label="${esc(w.label)}">
     <div class="t"><img src="${esc(w.thumb)}" alt=""></div><span>${esc(w.label)}</span></button></li>`).join('');
