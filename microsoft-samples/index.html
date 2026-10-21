@@ -2,8 +2,9 @@
 <!-- Design gallery page (Benedict, 2026-10-20, T-012). gallery.py fills /*DATA*/ and 10; edit the look here, the design list in gallery.py.
      Brand > model > Minimal / Creative rows of shoes -> click -> viewer with every side and an "Open in 3D customizer" link.
      Arrows/keys/swipe = sides of this shoe. No previous / next design buttons (Benedict, Oct 21). Empty slots link to an empty shoe.
-     Edit mode (Benedict, Oct 21: "I should be able to edit the links of 3d"): only when served by scripts/serve.py (/api/ping answers),
-     each design gets "Change 3D link", each empty slot a paste box, and the header a Publish button. The public copy shows none. -->
+     Edit mode (Benedict, Oct 21: "I should be able to edit the links of 3d"): when the server on his Mac answers (scripts/serve.py,
+     /api/ping, also reached from the PUBLIC page at http://localhost:8791), each design gets "Change 3D link", each empty slot a paste
+     box, and the header a Publish button. Anyone else (Conrad) sees none. A save made from the public page publishes itself. -->
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Microsoft Final Designs</title>
@@ -263,18 +264,32 @@ stage.addEventListener('pointerup', e => {
   if (sx === null) return; const dx = e.clientX - sx, dy = e.clientY - sy; sx = null;
   if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) side(dx < 0 ? 1 : -1);
 });
-// edit mode: only on the local server
+// edit mode: the server on Benedict's Mac. On localhost it is this same origin; on the public page it is reached at localhost:8791.
+const LOCAL = ['localhost', '127.0.0.1'].includes(location.hostname), API = LOCAL ? '' : 'http://localhost:8791';
+let pageNow = '';   // this page's HTML as served, to notice when GitHub has published the new version
 async function post(path, body) {
-  const r = await fetch(path, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)});
-  return r.json().catch(() => ({ok: false, error: 'no answer from the local server'}));
+  try { const r = await fetch(API + path, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)}); return await r.json(); }
+  catch (e) { return {ok: false, error: 'no answer from the server on your Mac (is the microsoft-gallery server running?)'}; }
+}
+async function waitForPublish(msg) {
+  for (let i = 0; i < 36; i++) {   // GitHub Pages takes about a minute
+    await new Promise(r => setTimeout(r, 5000));
+    const t = await fetch(location.pathname + '?n=' + Date.now(), {cache: 'no-store'}).then(r => r.text()).catch(() => '');
+    if (t && t !== pageNow) return true;
+    msg.textContent = `Published. Waiting for the page to update (${(i + 1) * 5}s)...`;
+  }
+  return false;
 }
 async function saveLink(key, url, name, msg) {
   msg.className = 'msg'; msg.textContent = 'Saving, pulling the pictures from the customizer...';
-  const r = await post('/api/link', {key, url, name});
+  const r = await post('/api/link', {key, url, name, publish: !LOCAL});
   if (!r.ok) { msg.textContent = r.error || 'Could not save'; return; }
-  sessionStorage.setItem('reopen', key); location.hash = ''; location.reload();
+  sessionStorage.setItem('reopen', key);
+  if (!LOCAL) { msg.className = 'msg ok'; msg.textContent = r.published ? 'Saved and published. Waiting for the page to update...' : ('Saved, but publishing failed: ' + (r.message || '')); if (r.published) await waitForPublish(msg); else return; }
+  location.hash = ''; location.reload();
 }
-fetch('/api/ping', {cache: 'no-store'}).then(r => r.ok && r.json()).then(j => { if (j && j.ok) document.body.classList.add('local'); }).catch(() => {});
+fetch(API + '/api/ping', {cache: 'no-store'}).then(r => r.ok && r.json()).then(j => { if (j && j.ok) document.body.classList.add('local'); }).catch(() => {});
+if (!LOCAL) fetch(location.pathname + '?n=' + Date.now(), {cache: 'no-store'}).then(r => r.text()).then(t => { pageNow = t; }).catch(() => {});
 $('v-edit').onclick = () => { const f = $('v-form'), d = flat[di]; f.hidden = !f.hidden; $('v-url').value = d.url || ''; $('v-nm').value = d.short || ''; $('v-msg').textContent = ''; if (!f.hidden) $('v-url').focus(); };
 $('v-form').onsubmit = e => { e.preventDefault(); saveLink(flat[di].key, $('v-url').value, $('v-nm').value, $('v-msg')); };
 $('v-clear').onclick = () => { if (confirm('Take the 3D link off this design?')) saveLink(flat[di].key, '', '', $('v-msg')); };
@@ -286,6 +301,7 @@ $('publish').onclick = async () => {
   const m = $('pubmsg'); m.className = 'msg'; m.textContent = 'Publishing...'; $('publish').disabled = true;
   const r = await post('/api/publish', {}); $('publish').disabled = false;
   m.className = r.ok ? 'msg ok' : 'msg'; m.textContent = r.message || r.error || '';
+  if (r.ok && !LOCAL && !/Nothing new/.test(r.message || '')) { if (await waitForPublish(m)) location.reload(); }
 };
 const reopen = sessionStorage.getItem('reopen'); sessionStorage.removeItem('reopen');
 if (reopen) { const i = flat.findIndex(d => d.key === reopen); if (i >= 0) open(i); else document.querySelector(`form[data-key="${reopen}"]`)?.scrollIntoView({block: 'center'}); }
