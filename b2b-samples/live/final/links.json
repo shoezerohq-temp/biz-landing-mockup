@@ -1,0 +1,32 @@
+{
+ "derse-classic-1": {
+  "url": "https://shoezero.com/pages/share-design/?model=classic-zero&configId=424179",
+  "name": "Derse 1",
+  "model": "classic-zero"
+ },
+ "derse-classic-2": {
+  "url": "https://shoezero.com/pages/share-design/?model=classic-zero&configId=424180",
+  "name": "Derse 8",
+  "model": "classic-zero"
+ },
+ "fourloko-classic-1": {
+  "url": "https://shoezero.com/pages/share-design/?model=classic-zero&configId=424182",
+  "name": "Four Loko 5",
+  "model": "classic-zero"
+ },
+ "fourloko-classic-2": {
+  "url": "https://shoezero.com/pages/share-design/?model=classic-zero&configId=424184",
+  "name": "Four Loko 11",
+  "model": "classic-zero"
+ },
+ "abbvie-core-1": {
+  "url": "https://shoezero.com/pages/share-design/?model=court-zero-lowtop&configId=424186",
+  "name": "AbbVie",
+  "model": "court-zero-lowtop"
+ },
+ "fourloko-core-1": {
+  "url": "https://shoezero.com/pages/share-design/?model=court-zero-lowtop&configId=424187",
+  "name": "Four Loko 6",
+  "model": "court-zero-lowtop"
+ }
+}

@@ -1,0 +1,32 @@
+# b2b-gallery-link: same as gallery-link for the B2B samples page (b2b-samples/index.html, "Edit links" + a token
+# stored in his browser). The page starts this workflow; it fetches the design's four customizer pictures, rebuilds the gallery, commits,
+# and asks the Pages workflow to deploy. Nothing runs on anyone's computer. Source: copy of gallery-link.yml.
+name: b2b-gallery-link
+on:
+  workflow_dispatch:
+    inputs:
+      key:  {description: "slot, e.g. sql-core-creative-1", required: true, type: string}
+      url:  {description: "share link (empty = make the slot empty)", required: false, type: string, default: ""}
+      name: {description: "name shown under the shoe (optional)", required: false, type: string, default: ""}
+concurrency: {group: b2b-gallery-link, cancel-in-progress: false}
+permissions: {contents: write, actions: write}
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.12"}
+      - run: pip install --quiet pillow numpy
+      - name: update the slot and rebuild
+        env: {GALLERY_ROOT: b2b-samples}
+        run: python b2b-samples/_build/update.py --key "${{ inputs.key }}" --url "${{ inputs.url }}" --name "${{ inputs.name }}"
+      - name: commit and push
+        run: |
+          git config user.name "gallery-link"; git config user.email "gallery-link@users.noreply.github.com"
+          git add b2b-samples/index.html b2b-samples/gallery.html b2b-samples/live
+          git diff --cached --quiet && echo "nothing changed" || git commit -q -m "B2B gallery: ${{ inputs.key }} -> ${{ inputs.url || 'empty' }}" -m "Co-Authored-By: Claude Fable 5.1 <noreply@anthropic.com>"
+          git pull -q --rebase origin main && git push -q origin HEAD:main
+      - name: deploy the page
+        env: {GH_TOKEN: "${{ github.token }}"}
+        run: gh workflow run pages.yml --ref main

@@ -1,0 +1,336 @@
+<!doctype html>
+<!-- Design gallery page (Benedict, 2026-10-20, T-012). gallery.py fills /*DATA*/ and __COUNT__; edit the look here, the design list in gallery.py.
+     Brand > model > rows of shoes -> click -> viewer with every side and an "Open in 3D customizer" link.
+     Arrows/keys/swipe = sides of this shoe. No previous / next design buttons (Benedict, Oct 21). Empty slots link to an empty shoe.
+     Edit mode (Benedict, Oct 21: "I should be able to edit the links of 3d"): when the server on his Mac answers (scripts/serve.py,
+     /api/ping, also reached from the PUBLIC page at http://localhost:8791), each design gets "Change 3D link", each empty slot a paste
+     box, and the header a Publish button. Oct 22 01:50 (Benedict: "make it easier to replace links ... ONLY FOR ME"): on the public page the same
+     controls appear only when a GitHub token is stored in this browser (the "Edit links" link under the title); a save then starts the
+     repo's gallery-link workflow, which fetches the design's pictures, rebuilds and republishes, and the page reloads itself when the
+     new version is live. No server anywhere. Conrad, with no token, sees a plain gallery. -->
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>__TITLE__</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#1a1a1a; --muted:#666; --line:#e5e5e5; --ground:#f0f0f0; --paper:#fff; --accent:#00704a; --accent-soft:#e6f2ed;
+  --r-card:12px; --r-panel:16px; --r-btn:8px;
+  --shadow:0 1px 2px rgba(26,26,26,.06),0 6px 16px rgba(26,26,26,.07),0 20px 40px rgba(26,26,26,.08);
+  --ease:cubic-bezier(0.22,1,0.36,1);
+  --font:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scrollbar-gutter:stable;-webkit-text-size-adjust:100%}
+html.locked{overflow:hidden}
+body{margin:0;font:400 15px/1.5 var(--font);color:var(--ink);background:var(--ground);-webkit-font-smoothing:antialiased}
+::selection{background:var(--accent-soft);color:var(--ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+img{display:block;max-width:100%}
+button{font:inherit;color:inherit}
+
+.page{max-width:none;margin:0;padding:20px 16px 40px}   /* Benedict Oct 20: less margins */
+.intro{margin:0 0 20px}
+h1{margin:0;font-weight:800;font-size:clamp(28px,3.2vw,44px);line-height:1.1;letter-spacing:-0.02em;text-wrap:balance}
+.intro p{margin:10px 0 0;color:var(--muted);font-size:16px}
+
+.brand{margin:0 0 36px}
+.brand>h2{margin:0 0 12px;font-weight:800;font-size:30px;letter-spacing:-0.02em}
+.group{margin:0 0 24px}
+.row{display:grid;grid-template-columns:96px minmax(0,1fr);gap:12px;align-items:start;margin:0 0 12px}
+.row .grid{grid-template-columns:repeat(5,minmax(0,1fr))}   /* at most 3 designs a row: bigger tiles */
+.row-h{padding-top:10px;font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.group-h{display:flex;align-items:baseline;gap:12px;margin:0 0 8px}
+.group-h h3{margin:0;font-weight:800;font-size:20px;letter-spacing:-0.02em}
+.group-h span{color:var(--muted);font-size:14px;font-variant-numeric:tabular-nums}
+.grid{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:10px;list-style:none;margin:0;padding:0}
+
+.tile{display:flex;flex-direction:column;height:100%;background:var(--paper);border-radius:var(--r-card);padding:6px 6px 8px;
+  text-decoration:none;color:var(--ink);transition:transform 300ms var(--ease),box-shadow 300ms var(--ease)}
+.tile:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.tile:active{transform:translateY(0)}
+.tile .pic{aspect-ratio:16/9;min-height:0;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.tile img{width:100%;height:100%;object-fit:contain}
+.tile .cap{display:flex;gap:6px;margin-top:4px;font-size:13px;line-height:1.3;font-weight:600}
+.tile .num{color:var(--muted);font-weight:400;font-variant-numeric:tabular-nums}
+.tile.empty{background:transparent;border:2px dashed #cfcfcf;justify-content:center;align-items:center;text-align:center;gap:4px;padding:12px}
+.tile.empty a{color:var(--muted);font-size:12px}
+.tile.empty .pic{display:none}
+.tile.empty strong{font-size:14px}
+.tile.empty span{font-size:12px;color:var(--muted)}
+body:not(.local) .edit{display:none!important}   /* edit boxes exist only on the local server; the public copy never shows them */
+body.local .edit{display:flex}
+.slot-form{flex-direction:column;gap:6px;width:100%;margin-top:6px}
+.slot-form input,.linkform input{font:inherit;font-size:13px;height:34px;padding:0 10px;border:1px solid var(--line);border-radius:var(--r-btn);background:var(--paper);min-width:0;width:100%}
+.slot-form button,.linkform button{height:34px}
+.msg{font-size:12px;color:#b00020;min-height:0}
+.msg.ok{color:var(--accent)}
+.linkform{gap:8px;align-items:center;padding:10px 24px;border-bottom:1px solid var(--line);background:var(--ground)}
+.linkform[hidden]{display:none!important}
+.linkform .url{flex:3}.linkform .nm{flex:1}
+.pubbar{gap:10px;align-items:center;margin:12px 0 0}
+.keyline{margin:8px 0 0;font-size:12px}.keyline a{color:var(--muted)}
+body.local .pubbar.gh{display:none}
+.btn.go{background:var(--ink);border-color:var(--ink);color:var(--paper);text-decoration:none}
+.btn.go:hover{background:#333;border-color:#333}
+
+/* viewer */
+dialog{padding:0;border:0;background:transparent;color:var(--ink);max-width:none;max-height:none;
+  width:min(1120px,calc(100vw - 48px));height:min(920px,calc(100dvh - 48px));overflow:visible}
+dialog::backdrop{background:rgba(26,26,26,.72);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+dialog[open]{animation:pop 350ms var(--ease)}
+dialog[open]::backdrop{animation:fade 300ms var(--ease)}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+.panel:focus{outline:none}
+.panel{display:flex;flex-direction:column;width:100%;height:100%;background:var(--paper);border-radius:var(--r-panel);box-shadow:var(--shadow);overflow:hidden}
+
+.bar{display:flex;align-items:center;gap:12px;padding:14px 14px 14px 24px;border-bottom:1px solid var(--line)}
+.title{flex:1;min-width:0}
+.title h2{margin:0;font-size:19px;font-weight:800;letter-spacing:-0.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.title h2 .num{color:var(--muted);font-weight:400;margin-right:6px;font-variant-numeric:tabular-nums}
+.title p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+.btn{display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:var(--r-btn);
+  background:var(--paper);cursor:pointer;font-size:14px;font-weight:600;white-space:nowrap;transition:background 200ms var(--ease),border-color 200ms var(--ease)}
+.btn:hover{background:var(--ground);border-color:#d6d6d6}
+.btn svg{width:18px;height:18px;flex:none}
+.btn.icon{width:40px;padding:0;justify-content:center}
+
+.stage{position:relative;flex:1;min-height:0;display:flex;align-items:center;justify-content:center;padding:8px 56px;touch-action:pan-y;user-select:none}
+.stage img{width:100%;height:100%;object-fit:contain;transition:opacity 200ms var(--ease)}
+.stage img.swap{opacity:.25}
+.stage .missing{display:none;color:var(--muted);font-size:15px}
+.stage.broken img{display:none}.stage.broken .missing{display:block}
+.arrow{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;border-radius:9999px;border:1px solid var(--line);
+  background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:background 200ms var(--ease),box-shadow 200ms var(--ease)}
+.arrow:hover{background:var(--paper);box-shadow:var(--shadow)}
+.arrow svg{width:22px;height:22px}
+.arrow.prev{left:16px}.arrow.next{right:16px}
+
+.sides{border-top:1px solid var(--line);padding:12px 16px 14px}
+.strip{position:relative;display:flex;gap:8px;justify-content:center;overflow-x:auto;scrollbar-width:thin;scrollbar-color:#cfcfcf transparent;list-style:none;margin:0;padding:2px}
+.strip button{display:flex;flex-direction:column;align-items:center;gap:6px;width:100px;flex:none;padding:6px 6px 8px;border:2px solid transparent;border-radius:10px;
+  background:none;cursor:pointer;transition:border-color 200ms var(--ease),background 200ms var(--ease)}
+.strip button:hover{background:var(--ground)}
+.strip button[aria-current="true"]{border-color:var(--ink)}
+.strip .t{width:100%;height:64px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.strip img{width:100%;height:100%;object-fit:contain}
+.strip span{font-size:12px;line-height:1.2;color:var(--muted);text-align:center;white-space:nowrap}
+.strip button[aria-current="true"] span{color:var(--ink);font-weight:600}
+.only2d{font-size:13px;color:var(--muted);white-space:nowrap;align-self:center}
+.only2d-tag{margin-left:auto;font-size:11px;color:var(--muted);white-space:nowrap}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+@media (max-width:1199px){.grid{grid-template-columns:repeat(6,minmax(0,1fr))}}
+@media (max-width:959px){.grid,.row .grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:639px){
+  .row{grid-template-columns:1fr;gap:4px}
+  .row-h{padding-top:0}
+  .page{padding:28px 16px 56px}
+  .intro{margin-bottom:28px}
+  .group{margin-bottom:36px}
+  .grid,.row .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  dialog{width:100vw;height:100dvh}
+  .panel{border-radius:0}
+  .bar{padding:10px 10px 10px 16px;gap:6px}
+  .title h2{font-size:16px}
+  .btn .lbl{display:none}
+  .btn{width:40px;padding:0;justify-content:center}
+  .stage{padding:8px}
+  .arrow{width:40px;height:40px}.arrow.prev{left:8px}.arrow.next{right:8px}
+  .sides{padding:8px 8px 12px}
+  .strip{justify-content:flex-start}
+  .strip button{width:68px;padding:4px}
+  .strip .t{height:46px}
+  .strip span{display:none}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after,dialog[open],dialog[open]::backdrop{animation:none!important;transition:none!important}
+  .tile:hover{transform:none}
+}
+</style></head><body>
+<main class="page">
+  <header class="intro">
+    <h1>__TITLE__</h1>
+    <p>__COUNT__ designs. Click any shoe to see it from every side. Most also open in the 3D customizer; the ones marked 2D only have pictures but no 3D view.</p>
+    <div class="edit pubbar"><button class="btn go" id="publish" type="button">Publish to the public link</button><span class="msg" id="pubmsg"></span></div>
+    <p class="keyline"><a href="#" id="keylink">Edit links</a></p>
+  </header>
+  <div id="groups"></div>
+</main>
+
+<dialog id="viewer" aria-labelledby="v-name">
+  <div class="panel" tabindex="-1">
+    <div class="bar">
+      <div class="title"><h2 id="v-name"></h2><p id="v-side" aria-live="polite"></p></div>
+      <button class="btn edit" id="v-edit" type="button">Change 3D link</button>
+      <a class="btn go" id="v-link" href="#" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6M10 14 21 3M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg><span class="lbl" id="v-link-lbl">Open in 3D customizer</span></a>
+      <span class="only2d" id="v-2d" style="display:none">2D pictures only, no 3D view for this design</span>
+      <button class="btn icon" id="v-close" type="button" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+    </div>
+    <form class="edit linkform" id="v-form" hidden>
+      <input class="url" id="v-url" type="url" placeholder="Paste the share link from the 3D customizer" aria-label="3D customizer share link">
+      <input class="nm" id="v-nm" type="text" placeholder="Name (optional)" aria-label="Design name">
+      <button class="btn go" type="submit">Save</button>
+      <button class="btn" type="button" id="v-clear">Remove link</button>
+      <span class="msg" id="v-msg"></span>
+    </form>
+    <div class="stage" id="v-stage">
+      <img id="v-img" alt="">
+      <p class="missing">This side isn't available yet.</p>
+      <button class="arrow prev" id="v-prev" type="button" aria-label="Previous side"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg></button>
+      <button class="arrow next" id="v-next" type="button" aria-label="Next side"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></button>
+    </div>
+    <nav class="sides" aria-label="Sides"><ul class="strip" id="v-strip"></ul></nav>
+  </div>
+</dialog>
+
+<script>
+const DATA = /*DATA*/null;
+const flat = [];
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+// grid: brand > model > Minimal / Creative rows
+const tile = d => d.empty
+  ? `<li><div class="tile empty">
+       <strong>${esc(d.short)}</strong><span>Not designed yet</span>
+       <a href="${esc(d.link)}" target="_blank" rel="noopener">Start it in the 3D customizer</a>
+       <form class="edit slot-form" data-key="${esc(d.key)}">
+         <input type="url" name="url" placeholder="Paste the 3D share link" aria-label="3D share link for ${esc(d.name)}" required>
+         <input type="text" name="nm" placeholder="Name (optional)" aria-label="Name for ${esc(d.name)}">
+         <button class="btn go" type="submit">Add</button><span class="msg"></span>
+       </form></div></li>`
+  : (() => { const i = flat.push(d) - 1; return `
+      <li><a class="tile" href="#${esc(d.slug)}" data-i="${i}">
+        <div class="pic"><img src="${esc(d.cover)}" alt="${esc(d.name)}"></div>
+        <div class="cap"><span class="num">${d.n}</span><span>${esc(d.short)}</span>${d.url ? '' : '<span class="only2d-tag">2D only</span>'}</div>
+      </a></li>`; })();
+$('groups').innerHTML = DATA.brands.map(b => `
+  <section class="brand" aria-labelledby="b-${esc(b.slug)}"><h2 id="b-${esc(b.slug)}">${esc(b.name)}</h2>
+  ${b.models.map(m => { const count = m.rows.reduce((a, r) => a + r.designs.filter(d => !d.empty).length, 0); return `
+    <section class="group" aria-labelledby="g-${esc(m.slug)}">
+      <div class="group-h"><h3 id="g-${esc(m.slug)}">${esc(m.name)}</h3><span>${count} ${count === 1 ? 'design' : 'designs'}</span></div>
+      ${m.rows.map(r => `<div class="row"><div class="row-h">${esc(r.name)}</div><ul class="grid">${r.designs.map(tile).join('')}</ul></div>`).join('')}
+    </section>`; }).join('')}
+  </section>`).join('');
+
+// viewer
+const dlg = $('viewer'), img = $('v-img'), stage = $('v-stage');
+let di = 0, vi = 0, token = 0;
+const preload = d => d.views.forEach(v => { const p = new Image(); p.src = v.full; });
+
+function show() {
+  const d = flat[di], v = d.views[vi], t = ++token;
+  $('v-name').innerHTML = `<span class="num">${d.n}</span>${esc(d.name)}`;
+  $('v-side').textContent = `${v.label} · side ${vi + 1} of ${d.views.length}`;
+  $('v-link').href = d.link || '#'; $('v-link-lbl').textContent = d.linkLabel; $('v-link').style.display = d.url ? '' : 'none'; $('v-2d').style.display = d.url ? 'none' : '';
+  $('v-edit').textContent = d.url ? 'Change 3D link' : 'Add 3D link';
+  $('v-strip').innerHTML = d.views.map((w, j) => `<li><button type="button" data-v="${j}" aria-current="${j === vi}" aria-label="${esc(w.label)}">
+    <div class="t"><img src="${esc(w.thumb)}" alt=""></div><span>${esc(w.label)}</span></button></li>`).join('');
+  const strip = $('v-strip'), cur = strip.querySelector('[aria-current="true"]').parentNode;   // keep the active side in view on phones, never scroll the page
+  strip.scrollLeft = cur.offsetLeft - (strip.clientWidth - cur.offsetWidth) / 2;
+  img.alt = `${d.name}, ${v.label}`;
+  stage.classList.remove('broken');
+  if (img.getAttribute('src') === v.full) return;
+  img.classList.add('swap');
+  const done = ok => { if (t !== token) return; if (ok) img.src = v.full; else stage.classList.add('broken'); img.classList.remove('swap'); };
+  const next = new Image();   // onload, not decode(): decode() can hang forever in some browsers
+  next.onload = () => done(true); next.onerror = () => done(false); next.src = v.full;
+}
+function open(i, v) {
+  di = i; vi = v ?? Math.max(0, flat[i].views.findIndex(w => w.cover));
+  preload(flat[di]); show();
+  if (!dlg.open) { document.documentElement.classList.add('locked'); dlg.showModal(); dlg.querySelector('.panel').focus(); }
+  history.replaceState(null, '', '#' + flat[di].slug);
+}
+const side = s => { const n = flat[di].views.length; vi = (vi + s + n) % n; show(); };
+
+document.addEventListener('click', e => {
+  const a = e.target.closest('a.tile');
+  if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button) return;
+  e.preventDefault(); open(+a.dataset.i);
+});
+dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); });   // click outside the panel
+$('v-close').onclick = () => dlg.close();
+$('v-prev').onclick = () => side(-1); $('v-next').onclick = () => side(1);
+$('v-strip').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { vi = +b.dataset.v; show(); } });
+dlg.addEventListener('keydown', e => {
+  const k = {ArrowRight: () => side(1), ArrowLeft: () => side(-1)}[e.key];
+  if (k) { e.preventDefault(); k(); }
+});
+dlg.addEventListener('close', () => {
+  document.documentElement.classList.remove('locked');
+  history.replaceState(null, '', location.pathname + location.search);
+  const tile = document.querySelector(`a.tile[data-i="${di}"]`);
+  if (tile) tile.focus({preventScroll: true});
+});
+let sx = null, sy = 0;   // swipe on phones
+stage.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') { sx = e.clientX; sy = e.clientY; } });
+stage.addEventListener('pointerup', e => {
+  if (sx === null) return; const dx = e.clientX - sx, dy = e.clientY - sy; sx = null;
+  if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy)) side(dx < 0 ? 1 : -1);
+});
+// edit mode: the server on Benedict's Mac. On localhost it is this same origin; on the public page it is reached at localhost:8791.
+const LOCAL = ['localhost', '127.0.0.1'].includes(location.hostname), API = LOCAL ? '' : 'http://localhost:8791';
+const GH = {owner: 'shoezerohq-temp', repo: 'biz-landing-mockup', workflow: 'b2b-gallery-link.yml', branch: 'main'};
+const ghToken = () => localStorage.getItem('gallery_gh_token') || '';
+let pageNow = '';   // this page's HTML as served, to notice when GitHub has published the new version
+async function post(path, body) {
+  if (!LOCAL && ghToken()) {   // public page with a token: ask GitHub to run the gallery-link workflow (it fetches, rebuilds, republishes)
+    if (path !== '/api/link') return {ok: false, error: 'not needed here: a saved link publishes itself'};
+    const r = await fetch(`https://api.github.com/repos/${GH.owner}/${GH.repo}/actions/workflows/${GH.workflow}/dispatches`,
+      {method: 'POST', headers: {'Authorization': 'Bearer ' + ghToken(), 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json'},
+       body: JSON.stringify({ref: GH.branch, inputs: {key: body.key, url: body.url || '', name: body.name || ''}})}).catch(e => ({status: 0, statusText: e.message}));
+    if (r.status === 204) return {ok: true, published: true, gh: true, message: 'GitHub is rebuilding the gallery'};
+    const why = r.status === 401 || r.status === 403 ? 'the token was refused (click Edit links and paste a fresh one)' : r.status === 0 ? r.statusText : 'GitHub answered ' + r.status;
+    return {ok: false, error: why};
+  }
+  try { const r = await fetch(API + path, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(body)}); return await r.json(); }
+  catch (e) { return {ok: false, error: 'no answer from the server on your Mac (is the B2B gallery server running?)'}; }
+}
+async function waitForPublish(msg, rounds = 36) {
+  for (let i = 0; i < rounds; i++) {   // GitHub Pages takes about a minute; the workflow path about three
+    await new Promise(r => setTimeout(r, 5000));
+    const t = await fetch(location.pathname + '?n=' + Date.now(), {cache: 'no-store'}).then(r => r.text()).catch(() => '');
+    if (t && t !== pageNow) return true;
+    msg.textContent = `${ghToken() && !LOCAL ? 'GitHub is rebuilding' : 'Published'}. Waiting for the page to update (${(i + 1) * 5}s)...`;
+  }
+  return false;
+}
+async function saveLink(key, url, name, msg) {
+  msg.className = 'msg'; msg.textContent = 'Saving, pulling the pictures from the customizer...';
+  const r = await post('/api/link', {key, url, name, publish: !LOCAL});
+  if (!r.ok) { msg.textContent = r.error || 'Could not save'; return; }
+  sessionStorage.setItem('reopen', key);
+  if (!LOCAL) { msg.className = 'msg ok'; msg.textContent = r.published ? 'Saved and published. Waiting for the page to update...' : ('Saved, but publishing failed: ' + (r.message || '')); if (r.published) await waitForPublish(msg, r.gh ? 72 : 36); else return; }
+  location.hash = ''; location.reload();
+}
+// Benedict, Oct 22 01:20: the online page is what Conrad gets, so it never shows edit controls; editing lives on http://localhost:8791 only.
+if (LOCAL) fetch(API + '/api/ping', {cache: 'no-store'}).then(r => r.ok && r.json()).then(j => { if (j && j.ok) document.body.classList.add('local'); }).catch(() => {});
+else if (ghToken()) { document.body.classList.add('local'); document.querySelector('.pubbar').classList.add('gh'); }
+$('keylink').onclick = e => { e.preventDefault();
+  const t = prompt(ghToken() ? 'A GitHub token is stored in this browser. Paste a new one, or clear the box and press OK to stop editing here.' : 'Paste your GitHub token (fine-grained, this repo only, Actions: read and write). It stays in this browser.', ghToken());
+  if (t === null) return; if (t.trim()) localStorage.setItem('gallery_gh_token', t.trim()); else localStorage.removeItem('gallery_gh_token'); location.reload(); };
+if (!LOCAL) fetch(location.pathname + '?n=' + Date.now(), {cache: 'no-store'}).then(r => r.text()).then(t => { pageNow = t; }).catch(() => {});
+$('v-edit').onclick = () => { const f = $('v-form'), d = flat[di]; f.hidden = !f.hidden; $('v-url').value = d.url || ''; $('v-nm').value = d.short || ''; $('v-msg').textContent = ''; if (!f.hidden) $('v-url').focus(); };
+$('v-form').onsubmit = e => { e.preventDefault(); saveLink(flat[di].key, $('v-url').value, $('v-nm').value, $('v-msg')); };
+$('v-clear').onclick = () => { if (confirm('Take the 3D link off this design?')) saveLink(flat[di].key, '', '', $('v-msg')); };
+document.addEventListener('submit', e => {
+  const f = e.target.closest('form.slot-form'); if (!f) return; e.preventDefault();
+  saveLink(f.dataset.key, f.elements.url.value, f.elements.nm.value, f.querySelector('.msg'));
+});
+$('publish').onclick = async () => {
+  const m = $('pubmsg'); m.className = 'msg'; m.textContent = 'Publishing...'; $('publish').disabled = true;
+  const r = await post('/api/publish', {}); $('publish').disabled = false;
+  m.className = r.ok ? 'msg ok' : 'msg'; m.textContent = r.message || r.error || '';
+  if (r.ok && !LOCAL && !/Nothing new/.test(r.message || '')) { if (await waitForPublish(m)) location.reload(); }
+};
+const reopen = sessionStorage.getItem('reopen'); sessionStorage.removeItem('reopen');
+if (reopen) { const i = flat.findIndex(d => d.key === reopen); if (i >= 0) open(i); else document.querySelector(`form[data-key="${reopen}"]`)?.scrollIntoView({block: 'center'}); }
+const start = flat.findIndex(d => '#' + d.slug === location.hash);   // a shared link opens its shoe
+if (start >= 0) open(start);
+</script>
+</body></html>
