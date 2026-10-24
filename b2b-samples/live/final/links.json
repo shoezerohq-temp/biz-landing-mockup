@@ -38,5 +38,10 @@
   "url": "https://shoezero.com/pages/share-design/?model=classic-zero&configId=424198",
   "name": "CareTrust, Salmon Heel",
   "model": "classic-zero"
+ },
+ "placer-street-1": {
+  "og": "live/og/placer-k13",
+  "name": "Placer",
+  "model": "street-zero"
  }
 }
