@@ -1,0 +1,36 @@
+<!doctype html>
+<!-- B2B sample designs for Conrad (Benedict, Oct 24, client-concerns T-036/T-041). Same look as microsoft-samples. Each design: pictures, Open in 3D, Copy link. -->
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>B2B Sample Designs</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#1a1a1a;--muted:#666;--line:#e5e5e5;--ground:#f0f0f0;--paper:#fff;--accent:#00704a;--accent-soft:#e6f2ed;--font:Inter,-apple-system,Helvetica,Arial,sans-serif}
+*{box-sizing:border-box}body{margin:0;font:400 15px/1.5 var(--font);color:var(--ink);background:var(--ground)}
+.page{max-width:1240px;margin:0 auto;padding:28px 16px 48px}h1{font:800 28px/1.2 var(--font);margin:0 0 4px}.sub{color:var(--muted);margin:0 0 20px}
+h2{font:800 20px/1.2 var(--font);margin:34px 0 10px}.card{background:var(--paper);border-radius:12px;padding:16px;margin:12px 0;box-shadow:0 1px 2px rgba(0,0,0,.06),0 6px 16px rgba(0,0,0,.06)}
+.row{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center}.t{font-weight:600;font-size:17px}.m{color:var(--muted)}
+.tag{font-size:12px;font-weight:600;padding:3px 9px;border-radius:9px;background:var(--accent-soft);color:var(--accent)}.tag.wait{background:#fff3d6;color:#8a5a00}
+.btns{margin-left:auto;display:flex;gap:8px}a.btn,button.btn{border:0;border-radius:8px;padding:8px 14px;font:600 14px var(--font);cursor:pointer;text-decoration:none}
+a.btn{background:var(--accent);color:#fff}button.btn{background:#eef0f2;color:var(--ink)}button.btn.ok{background:var(--accent-soft);color:var(--accent)}
+img{width:100%;display:block;margin-top:12px;border-radius:8px;background:#eee}
+</style></head><body><div class="page">
+<h1>B2B Sample Designs</h1><p class="sub">Open any design in 3D, or copy its link to send.</p>
+<div id="list"></div></div>
+<script>
+const D='https://shoe-zero-dev.threedium.co.uk/?model=';
+const G=[
+ ['AbbVie',[['DELOS (Sami\'s design)','Core Zero','court-zero-lowtop','424152','abbvie.jpg']]],
+ ['Derse',[['1: grey heel tab','Classic Zero','classic-zero','424078','derse-1.jpg'],['8: orange heel tab','Classic Zero','classic-zero','424079','derse-8.jpg']]],
+ ['iPromo: Four Loko',[['5: black heel tab','Classic Zero','classic-zero','424089','four-loko-5.jpg'],['11: cyan heel tab, black toe','Classic Zero','classic-zero','424092','four-loko-11.jpg'],['6: black and cyan','Core Zero','court-zero-lowtop','424169','four-loko-6.jpg']]],
+ ['iPromo: Placer High School',[['Placer','Street Zero',null,null,'placer.jpg']]],
+];
+const L=document.getElementById('list');
+for(const [client,ds] of G){const h=document.createElement('h2');h.textContent=client;L.appendChild(h);
+ for(const [name,shoe,model,id,img] of ds){const c=document.createElement('div');c.className='card';const url=model?D+model+'&configId='+id:null;
+  c.innerHTML='<div class="row"><span class="t"></span><span class="m"></span>'+(url?'':'<span class="tag wait">Pending: still being finished</span>')+'<span class="btns"></span></div><img loading="lazy">';
+  c.querySelector('.t').textContent=name;c.querySelector('.m').textContent=shoe;c.querySelector('img').src='img/'+img;c.querySelector('img').alt=client+' '+name;
+  if(url){const b=c.querySelector('.btns');const a=document.createElement('a');a.className='btn';a.href=url;a.target='_blank';a.rel='noopener';a.textContent='Open in 3D';
+   const k=document.createElement('button');k.className='btn';k.textContent='Copy link';k.onclick=async()=>{try{await navigator.clipboard.writeText(url)}catch(e){const t=document.createElement('textarea');t.value=url;document.body.appendChild(t);t.select();document.execCommand('copy');t.remove()}k.textContent='Copied';k.classList.add('ok');setTimeout(()=>{k.textContent='Copy link';k.classList.remove('ok')},1600)};
+   b.append(a,k)}
+  L.appendChild(c)}}
+</script></body></html>
