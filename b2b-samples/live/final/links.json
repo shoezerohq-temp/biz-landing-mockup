@@ -28,5 +28,15 @@
   "url": "https://shoezero.com/pages/share-design/?model=court-zero-lowtop&configId=424187",
   "name": "Four Loko 6",
   "model": "court-zero-lowtop"
+ },
+ "caretrust-classic-1": {
+  "url": "https://shoezero.com/pages/share-design/?model=classic-zero&configId=424197",
+  "name": "CareTrust, Black Heel",
+  "model": "classic-zero"
+ },
+ "caretrust-classic-2": {
+  "url": "https://shoezero.com/pages/share-design/?model=classic-zero&configId=424198",
+  "name": "CareTrust, Salmon Heel",
+  "model": "classic-zero"
  }
 }

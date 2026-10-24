@@ -7,7 +7,7 @@ import argparse, json, os, re, subprocess, sys
 HERE = os.path.dirname(os.path.abspath(__file__)); ROOT = os.environ["GALLERY_ROOT"]; sys.path.insert(0, HERE)
 import make_final_gallery_pictures as pics
 a = argparse.ArgumentParser(); a.add_argument("--key", required=True); a.add_argument("--url", default=""); a.add_argument("--name", default=""); a = a.parse_args()
-if not re.fullmatch(r"(abbvie|derse|fourloko|placer)-(classic|core|street)-\d+", a.key): sys.exit("unknown slot " + a.key)
+if not re.fullmatch(r"(abbvie|derse|fourloko|placer|caretrust)-(classic|core|street)-\d+", a.key): sys.exit("unknown slot " + a.key)
 links = json.load(open(pics.LINKS)); url = a.url.strip(); name = a.name.strip()[:60]
 if url:
     cid = pics.config_id(url); model = pics.fetch(cid).get("model", "")

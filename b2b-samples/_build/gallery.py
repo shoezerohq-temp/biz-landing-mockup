@@ -16,6 +16,7 @@ CURRENT = [
         ("Classic", [("Sample", [("Four Loko 5", "fourloko-classic-1"), ("Four Loko 11", "fourloko-classic-2")])]),
         ("Core", [("Sample", [("Four Loko 6", "fourloko-core-1")])]),
     ]),
+    ("CareTrust", [("Classic", [("Sample", [("Black Heel", "caretrust-classic-1"), ("Salmon Heel", "caretrust-classic-2")])])]),
     ("Placer", [("Street", [("Sample", [("Placer", "placer-street-1")])])]),
 ]
 LINKS = json.load(open(f"{HERE}/live/final/links.json"))
